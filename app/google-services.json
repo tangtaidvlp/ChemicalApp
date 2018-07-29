@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "371663469839",
+    "firebase_url": "https://chemicalapp-7f421.firebaseio.com",
+    "project_id": "chemicalapp-7f421",
+    "storage_bucket": "chemicalapp-7f421.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:371663469839:android:ba3c68bb9fa8b5df",
+        "android_client_info": {
+          "package_name": "phamf.com.chemicalapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "371663469839-jj477bg5dj2da4hla1je0d70raqknmcb.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDrE6DBUcHmC9jj2Ackz6jdsb32LGc7cKE"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
