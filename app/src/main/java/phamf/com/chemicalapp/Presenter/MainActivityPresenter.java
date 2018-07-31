@@ -13,12 +13,14 @@ import phamf.com.chemicalapp.Database.ChemicalEquationDatabase;
 import phamf.com.chemicalapp.Database.LessonDatabase;
 import phamf.com.chemicalapp.Database.OnlineDatabaseManager;
 import phamf.com.chemicalapp.MainActivity;
+import phamf.com.chemicalapp.Model.Chapter;
+import phamf.com.chemicalapp.Model.ChemicalEquation;
 import phamf.com.chemicalapp.RO_Model.RO_Chapter;
 import phamf.com.chemicalapp.RO_Model.RO_ChemicalEquation;
 import phamf.com.chemicalapp.RO_Model.RO_Lesson;
 import phamf.com.chemicalapp.Supporter.ROConverter;
 
-public class MainActivityPresenter {
+public class MainActivityPresenter implements OnlineDatabaseManager.OnDataLoaded{
 
 
     MainActivity view;
@@ -36,73 +38,70 @@ public class MainActivityPresenter {
     LessonDatabase lesson_database;
 
 
-    OnlineDatabaseManager OD_manager;
+    OnlineDatabaseManager OnlineDB_manager;
 
 
     public MainActivityPresenter (@NonNull MainActivity view) {
 
         this.view = view;
-
         this.context = view.getBaseContext();
 
+        OnlineDB_manager = new OnlineDatabaseManager();
+        OnlineDB_manager.setOnDataLoaded(this);
+
         ce_database = new ChemicalEquationDatabase(this.context);
-
         chapter_database = new ChapterDatabase(this.context);
-
         lesson_database = new LessonDatabase(this.context);
-
-        OD_manager = new OnlineDatabaseManager();
     }
 
 
-    public void updateCE_DB () {
-        ce_database.addOrUpdate(ROConverter.toRO_CEs(OD_manager.getAll_CE_Data()));
+
+    public void update_CE_OFFDB () {
+        OnlineDB_manager.getAll_CE_Data();
+    }
+
+    public void update_Chapter_OFFDB () {
+        OnlineDB_manager.getAll_Chapter_Data();
     }
 
 
-    public void updateChapter_DB () {
-        chapter_database.addOrUpdate(ROConverter.toRO_Chapters(OD_manager.getAll_Chapter_Data()));
-    }
 
-
-    public void updateLesson_DB () {
-        lesson_database.addOrUpdate(ROConverter.toRO_Lessons(OD_manager.getAll_Lesson_Data()));
-    }
-
-
-    public RealmResults<RO_Lesson> getLessonsFromDB (String field, int value) {
-        return lesson_database.readList(field, value);
-    }
-
-
-    public RealmResults<RO_Chapter> getChaptersFromDB (String field, int value) {
+    public RealmResults<RO_Chapter> get_Chapters_FromDB (String field, int value) {
         return chapter_database.readList(field, value);
     }
 
-
-    public RealmResults<RO_ChemicalEquation> getCEFromDB (String field, int value) {
+    public RealmResults<RO_ChemicalEquation> get_CEs_FromDB (String field, int value) {
         return ce_database.readList(field, value);
     }
 
-    public RealmResults<RO_Lesson> getLessonsFromDB () {
-        return lesson_database.getAll();
-    }
 
 
-    public RealmResults<RO_Chapter> getChaptersFromDB () {
+    public RealmResults<RO_Chapter> get_All_Chapters_FromDB () {
         return chapter_database.getAll();
     }
 
-
-    public RealmResults<RO_ChemicalEquation> getCEFromDB () {
+    public RealmResults<RO_ChemicalEquation> get_All_CEs_FromDB () {
         return ce_database.getAll();
     }
+
 
 
     public void closeDB() {
         ce_database.close();
         lesson_database.close();
         chapter_database.close();
+    }
+
+
+    //Called by "update_XXX" function above
+    @Override
+    public void onChapterLoadedFromFirebase(ArrayList<Chapter> chapters) {
+        chapter_database.addOrUpdate(ROConverter.toRO_Chapters(chapters));
+    }
+
+    @Override
+    public void onCE_LoadedFromFirebase(ArrayList<ChemicalEquation> equations) {
+         ce_database.addOrUpdate(ROConverter.toRO_CEs(equations));
     }
 }
 
