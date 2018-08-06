@@ -8,6 +8,8 @@ import java.security.Key;
 import java.util.ArrayList;
 import java.util.Random;
 
+import io.realm.Realm;
+import io.realm.RealmModel;
 import phamf.com.chemicalapp.RO_Model.RO_ChemicalEquation;
 
 public class ChemicalEquation {

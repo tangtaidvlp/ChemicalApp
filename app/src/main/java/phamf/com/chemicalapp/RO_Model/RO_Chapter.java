@@ -1,15 +1,30 @@
 package phamf.com.chemicalapp.RO_Model;
 
-import io.realm.RealmObject;
-import io.realm.annotations.PrimaryKey;
+import java.util.Collection;
 
-public class RO_Chapter extends RealmObject{
+import io.realm.RealmList;
+import io.realm.RealmModel;
+import io.realm.RealmObject;
+import io.realm.RealmResults;
+import io.realm.annotations.PrimaryKey;
+import phamf.com.chemicalapp.Abstraction.Menuable;
+
+public class RO_Chapter extends RealmObject implements Menuable{
 
     @PrimaryKey
-    private int id;
+    public int id;
 
-    private String name;
+    public String name;
 
+    public RealmList<RO_Lesson> lessons = new RealmList<>();
+
+    public RealmList<RO_Lesson> getLessons() {
+        return lessons;
+    }
+
+    public void setLessons(Collection<RO_Lesson> lessons) {
+        this.lessons.addAll(lessons);
+    }
 
     public RO_Chapter() {
 
@@ -30,4 +45,5 @@ public class RO_Chapter extends RealmObject{
     public void setName(String name) {
         this.name = name;
     }
+
 }

@@ -1,14 +1,15 @@
 package phamf.com.chemicalapp.RO_Model;
 
+import io.realm.RealmList;
 import io.realm.RealmObject;
+import io.realm.RealmResults;
 import io.realm.annotations.PrimaryKey;
+import phamf.com.chemicalapp.Abstraction.Menuable;
 
-public class RO_Lesson extends RealmObject {
+public class RO_Lesson extends RealmObject implements Menuable{
 
     @PrimaryKey
     private int id;
-
-    private int chapterId;
 
     private String name;
 
@@ -24,14 +25,6 @@ public class RO_Lesson extends RealmObject {
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public int getChapterId() {
-        return chapterId;
-    }
-
-    public void setChapterId(int chapterId) {
-        this.chapterId = chapterId;
     }
 
     public String getName() {

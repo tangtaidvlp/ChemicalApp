@@ -1,17 +1,10 @@
 package phamf.com.chemicalapp;
 
-import android.animation.Animator;
-import android.animation.AnimatorSet;
-import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Build;
-import android.provider.Settings;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
@@ -19,48 +12,38 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 
-import android.text.Editable;
-import android.text.TextWatcher;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.view.animation.AnimationSet;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Observable;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.realm.Realm;
-import io.realm.RealmConfiguration;
 import phamf.com.chemicalapp.Adapter.Search_List_Adapter;
 import phamf.com.chemicalapp.CustomAnimation.FadedInAnim;
 import phamf.com.chemicalapp.CustomAnimation.FadedOutAnim;
 import phamf.com.chemicalapp.Model.Chapter;
-import phamf.com.chemicalapp.Model.ChemicalEquation;
+import phamf.com.chemicalapp.Model.Lesson;
 import phamf.com.chemicalapp.Presenter.MainActivityPresenter;
-import phamf.com.chemicalapp.RO_Model.RO_ChemicalEquation;
 import phamf.com.chemicalapp.Service.FloatingSearchIconService;
 import phamf.com.chemicalapp.Supporter.FontManager;
 import phamf.com.chemicalapp.CustomView.VirtualKeyBoardSensor;
-import phamf.com.chemicalapp.Supporter.ROConverter;
+import phamf.com.chemicalapp.Supporter.FullScreenManager;
 
 public class MainActivity extends AppCompatActivity {
+
 
     static final int CODE_DRAW_OVER_OTHER_APP_PERMISSION = 2084;
 
@@ -106,9 +89,17 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.btn_quick_search) ImageButton btn_quick_search;
 
 
+    @BindView(R.id.drawer_layout) DrawerLayout drawer_Layout;
+
+
+    @BindView(R.id.nav_view) NavigationView nav_view;
+
+
     @BindView(R.id.rcv_search) RecyclerView rcv_search;
 
-    Search_List_Adapter rcv_search_adapter;
+    public Search_List_Adapter rcv_search_adapter;
+
+
 
 
     /**
@@ -127,9 +118,6 @@ public class MainActivity extends AppCompatActivity {
     private FullScreenManager fullScreenManager;
 
 
-    private RequireOverlayPermissionManager requireOverlayPermissionManager;
-
-
     private FloatingSearchViewManager floatingSearchViewManager;
 
 
@@ -143,6 +131,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+
         ButterKnife.bind(this);
 
         activityPresenter = new MainActivityPresenter(this);
@@ -153,20 +143,14 @@ public class MainActivity extends AppCompatActivity {
 
         addControl();
 
-        loadData();
+        activityPresenter.loadData();
 
         addEvent();
 
-        requireOverlayPermissionManager.requirePermission(CODE_DRAW_OVER_OTHER_APP_PERMISSION);
+        activityPresenter.requirePermission(CODE_DRAW_OVER_OTHER_APP_PERMISSION);
 
     }
 
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        activityPresenter.closeDB();
-    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -200,16 +184,18 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        activityPresenter.closeDB();
+    }
+
+
     @RequiresApi(api = Build.VERSION_CODES.O)
     private void addControl () {
         rcv_search_adapter = new Search_List_Adapter(this);
         rcv_search_adapter.adaptFor(rcv_search);
         makeSearchEditTextFullscreenable();
-    }
-
-
-    private void loadData () {
-        rcv_search_adapter.setData(activityPresenter.getCEFromDB());
     }
 
 
@@ -230,6 +216,7 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 searchModeManager.turn_OFF();
                 rcv_search_adapter.isSearching(false);
+                edt_search.setText("");
             }
         });
 
@@ -241,20 +228,35 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        edt_search.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
+        btn_lesson.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, LessonMenuActivity.class));
             }
+        });
 
+
+        btn_setting.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            public void onClick(View v) {
+                drawer_Layout.openDrawer(nav_view, true);
+            }
+        });
+
+
+        edt_search.addLiteTextChangeListener(new VirtualKeyBoardSensor.OnTextChangeLite() {
+            @Override
+            public void onTextChange(CharSequence s, int start, int before, int count) {
                 rcv_search_adapter.getFilter().filter(s);
             }
+        });
 
+
+        txt_lesson.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void afterTextChanged(Editable s) {
-
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, LessonMenuActivity.class));
             }
         });
 
@@ -275,7 +277,6 @@ public class MainActivity extends AppCompatActivity {
         searchModeManager.setDuration(500);
 
         fullScreenManager = new FullScreenManager(MainActivity.this);
-        requireOverlayPermissionManager = new RequireOverlayPermissionManager(MainActivity.this);
         floatingSearchViewManager = new FloatingSearchViewManager(MainActivity.this);
     }
 
@@ -295,6 +296,7 @@ public class MainActivity extends AppCompatActivity {
 
       edt_search.setOnClickListener(new View.OnClickListener() {
         @Override public void onClick(View v) {
+            Log.e("Click", "");
           if (!hasHiddenNavAndStatusBar)
           {
             fullScreenManager.hideNavAndStatusBar_After(1000);
@@ -304,16 +306,11 @@ public class MainActivity extends AppCompatActivity {
         }
       });
 
-      edt_search.addLiteTextChangeListener(new VirtualKeyBoardSensor.OnTextChangeLite() {
-          @Override
-          public void onTextChange(CharSequence s, int start, int before, int count) {
-              rcv_search_adapter.getFilter().filter(s);
-          }
-      });
 
       edt_search.setOnFocusChangeListener(new View.OnFocusChangeListener() {
         @Override
         public void onFocusChange(View v, boolean hasFocus) {
+            Log.e("OnFocusChange", "");
           if (!hasHiddenNavAndStatusBar)
           {
               fullScreenManager.hideNavAndStatusBar_After(1000);
@@ -415,68 +412,6 @@ class SearchModeManager {
 }
 
 
-// Hide virtual navigation bar and status bar
-class FullScreenManager {
-
-    private Activity activity;
-
-    FullScreenManager (Activity activity) {
-        this.activity = activity;
-    }
-
-    public void hideNavAndStatusBar() {
-        activity.getWindow().getDecorView().setSystemUiVisibility(
-                View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                        | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                        | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                        | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                        | View.SYSTEM_UI_FLAG_FULLSCREEN
-                        | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-        );
-    }
-
-    public void hideNavAndStatusBar_After (final long timeMilis) {
-        new Thread(new Runnable() {
-            @Override public void run() {
-                try {
-                    Thread.sleep(timeMilis);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-
-                activity.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        hideNavAndStatusBar();
-                    }
-                });
-            }
-        }).start();
-    }
-}
-
-
-
-class RequireOverlayPermissionManager {
-    Activity activity;
-    Context context;
-
-    RequireOverlayPermissionManager (Activity activity) {
-        this.activity = activity;
-        this.context = activity.getBaseContext();
-    }
-
-    public void requirePermission (int request_code) {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(context)) {
-            Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
-                    Uri.parse("package:" + context.getPackageName()));
-            activity.startActivityForResult(intent, request_code);
-        }
-    }
-
-}
-
-
 // Create quick search view which floating on screen
 class FloatingSearchViewManager {
 
@@ -491,3 +426,63 @@ class FloatingSearchViewManager {
     }
 }
 
+
+
+class TESTER {
+
+    public static final String DEVIDER = "<divider>";
+
+    public static final String BIG_TITLE = "<<B_TITLE>>";
+
+    public static final String SMALL_TITLE = "<<L_TITLE>>";
+
+    public static final String IMAGE = "<<PICTURE>>";
+
+    public static final String CONTENT = "<<CONTENT>>";
+
+
+    public void test () {
+        String content = DEVIDER + BIG_TITLE + "Tieu de lon" + DEVIDER + SMALL_TITLE + "Tieu de nho" + DEVIDER +
+                CONTENT + "Day là nội dung chính của cuộc biểu tình miên nam IRag " + DEVIDER;
+
+        DatabaseReference ref = FirebaseDatabase.getInstance().getReference();
+        int i = 1, j = 1;
+        Lesson lesson = new Lesson(i++, "Bai " + i, content);
+        Lesson lesson1 = new Lesson(i++, "Bai " + i, content);
+        Lesson lesson2 = new Lesson(i++, "Bai " + i, content);
+        Lesson lesson3 = new Lesson(i++, "Bai " + i, content);
+        Lesson lesson4 = new Lesson(i++, "Bai " + i, content);
+        Lesson lesson5 = new Lesson(i++, "Bai " + i, content);
+        Lesson lesson6 = new Lesson(i++, "Bai " + i, content);
+
+        ArrayList<Lesson> lessons = new ArrayList<>();
+        lessons.add(lesson);
+        lessons.add(lesson1);
+        lessons.add(lesson2);
+        lessons.add(lesson3);
+        lessons.add(lesson4);
+        lessons.add(lesson5);
+        lessons.add(lesson6);
+
+        Chapter chapter = new Chapter(j++, "Chuong " + j, lessons);
+        Chapter chapter1 = new Chapter(j++, "Chuong " + j, lessons);
+        Chapter chapter2 = new Chapter(j++, "Chuong " + j, lessons);
+        Chapter chapter3 = new Chapter(j++, "Chuong " + j, lessons);
+        Chapter chapter4 = new Chapter(j++, "Chuong " + j, lessons);
+        Chapter chapter5 = new Chapter(j++, "Chuong " + j, lessons);
+        Chapter chapter6 = new Chapter(j++, "Chuong " + j, lessons);
+
+        ArrayList<Chapter> chapters = new ArrayList<>();
+        chapters.add(chapter);
+        chapters.add(chapter1);
+        chapters.add(chapter2);
+        chapters.add(chapter3);
+        chapters.add(chapter4);
+        chapters.add(chapter5);
+        chapters.add(chapter6);
+
+
+        ref.child("Chapter").setValue(chapters);
+    }
+
+}

@@ -41,7 +41,7 @@ public class VirtualKeyBoardSensor extends android.support.v7.widget.AppCompatEd
           }
       });
 
-      
+
 
   }
 

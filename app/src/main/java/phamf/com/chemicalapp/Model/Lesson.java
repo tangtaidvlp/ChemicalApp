@@ -39,6 +39,10 @@ public class Lesson  {
         this.content = content;
     }
 
+    public Lesson () {
+
+    }
+
 
     public String getName() {
         return name;
@@ -64,7 +68,6 @@ public class Lesson  {
 
         RO_Lesson ro_lesson = new RO_Lesson();
         ro_lesson.setId(this.id);
-        ro_lesson.setChapterId(this.chapterId);
         ro_lesson.setName(this.name);
         ro_lesson.setContent(this.content);
 

@@ -26,13 +26,15 @@
         <service
             android:name=".Service.FloatingSearchIconService"
             android:enabled="true"
-            android:exported="true"></service>
+            android:exported="true" />
 
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
 
-        <activity android:name=".LessonMenuActivity"></activity>
+        <activity android:name=".LessonMenuActivity" />
+        <activity android:name=".LessonActivity" />
+        <activity android:name=".DPDPMenuActivity"></activity>
     </application>
 
 </manifest>

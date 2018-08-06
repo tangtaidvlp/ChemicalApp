@@ -19,6 +19,10 @@ public class Chapter {
         this.lessons = lessons;
     }
 
+    public Chapter () {
+
+    }
+
     public int getid() {
         return id;
     }
