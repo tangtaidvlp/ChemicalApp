@@ -243,6 +243,8 @@ public class MainActivity extends FullScreenActivity implements MainActivityPres
         if (AppThemeManager.isOnNightMode) {
             bg_night_mode.setVisibility(View.VISIBLE);
         }
+
+        btn_set_as_defaut.setOnClickListener( v -> {});
     }
 
 
@@ -350,141 +352,83 @@ public class MainActivity extends FullScreenActivity implements MainActivityPres
 
     private void addEvent () {
 
-        btn_search.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (!isOnSearchMode) {
-                    showSoftKeyboard();
-                    rcv_search_adapter.isSearching(true);
-                    searchModeManager.turn_ON();
-                    isOnSearchMode = true;
-                }
+        btn_search.setOnClickListener(v -> {
+            if (!isOnSearchMode) {
+                showSoftKeyboard();
+                rcv_search_adapter.isSearching(true);
+                searchModeManager.turn_ON();
+                isOnSearchMode = true;
             }
         });
 
-        bg_escape_search_mode.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                searchModeManager.turn_OFF();
-                edt_search.setText("");
-                rcv_search_adapter.isSearching(false);
-                hideSoftKeyboard(MainActivity.this);
-                isOnSearchMode = false;
-            }
+        bg_escape_search_mode.setOnClickListener(v -> {
+            searchModeManager.turn_OFF();
+            edt_search.setText("");
+            rcv_search_adapter.isSearching(false);
+            hideSoftKeyboard(MainActivity.this);
+            isOnSearchMode = false;
         });
 
-        btn_recent_lesson.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, RecentLessonsActivity.class));
-            }
-        });
+        btn_recent_lesson.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, RecentLessonsActivity.class)));
 
 
-        btn_bangtuanhoang.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, BangTuanHoangActivity.class));
-            }
+        btn_bangtuanhoang.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, BangTuanHoangActivity.class)));
+
+
+        btn_turnOff_search.setOnClickListener(v -> {
+            searchModeManager.turn_OFF();
+            edt_search.setText("");
+            rcv_search_adapter.isSearching(false);
         });
 
 
-        btn_turnOff_search.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                searchModeManager.turn_OFF();
-                edt_search.setText("");
-                rcv_search_adapter.isSearching(false);
-            }
+        btn_quick_search.setOnClickListener(v -> floatingSearchViewManager.init());
+
+
+        btn_lesson.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, LessonMenuActivity.class)));
+
+
+        btn_dongphan_danhphap.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, DPDPMenuActivity.class)));
+
+
+        btn_setting.setOnClickListener(v -> drawer_Layout.openDrawer(nav_view, true));
+
+
+        txt_lesson.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, LessonMenuActivity.class)));
+
+
+        rcv_search_adapter.setOnItemClickListener((view, equation, position) -> {
+            // Do this to bring the just chosen equation to top of the list
+            rcv_search_adapter.getList().remove(equation);
+            rcv_search_adapter.getList().add(0, equation);
+            rcv_search_adapter.notifyDataSetChanged();
+            // Update the top in database
+            activityPresenter.bringToTop(equation);
+            //
+            bg_escape_search_mode.performClick();
+            Intent intent = new Intent(MainActivity.this, ChemicalEquationActivity.class);
+            intent.putExtra(ChemicalEquationActivity.CHEMICAL_EQUATION, equation);
+            startActivity(intent);
+
         });
 
 
-        btn_quick_search.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                floatingSearchViewManager.init();
-            }
+        btn_set_as_defaut.setOnClickListener(v -> activityPresenter.setThemeDefaut());
+
+
+        btn_update.setOnClickListener (v -> {
+            activityPresenter.update_CE_OFFDB();
+            activityPresenter.update_Chapter_OFFDB();
         });
 
 
-        btn_lesson.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, LessonMenuActivity.class));
-            }
-        });
-
-
-        btn_dongphan_danhphap.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, DPDPMenuActivity.class));
-            }
-        });
-
-
-        btn_setting.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                drawer_Layout.openDrawer(nav_view, true);
-            }
-        });
-
-
-        txt_lesson.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, LessonMenuActivity.class));
-            }
-        });
-
-
-        rcv_search_adapter.setOnItemClickListener(new Search_List_Adapter.OnItemClickListener() {
-            @Override
-            public void OnItemClickListener(View view, RO_ChemicalEquation equation, int position) {
-                // Do this to bring the just chosen equation to top of the list
-                rcv_search_adapter.getList().remove(equation);
-                rcv_search_adapter.getList().add(0, equation);
-                rcv_search_adapter.notifyDataSetChanged();
-                // Update the top in database
-                activityPresenter.bringToTop(equation);
-                //
-                bg_escape_search_mode.performClick();
-                Intent intent = new Intent(MainActivity.this, ChemicalEquationActivity.class);
-                intent.putExtra(ChemicalEquationActivity.CHEMICAL_EQUATION, equation);
-                startActivity(intent);
-
-            }
-        });
-
-
-        btn_set_as_defaut.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                activityPresenter.setThemeDefaut();
-            }
-        });
-
-
-        btn_update.setOnClickListener (new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                activityPresenter.update_CE_OFFDB();
-                activityPresenter.update_Chapter_OFFDB();
-            }
-        });
-
-
-        sw_night_mode.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if (isChecked) {
-                    bg_night_mode.setVisibility(View.VISIBLE);
-                    activityPresenter.turnOnNightMode();
-                } else {
-                    bg_night_mode.setVisibility(View.GONE);
-                    activityPresenter.turnOffNightMode();
-                }
+        sw_night_mode.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if (isChecked) {
+                bg_night_mode.setVisibility(View.VISIBLE);
+                activityPresenter.turnOnNightMode();
+            } else {
+                bg_night_mode.setVisibility(View.GONE);
+                activityPresenter.turnOffNightMode();
             }
         });
 
@@ -538,42 +482,35 @@ public class MainActivity extends FullScreenActivity implements MainActivityPres
 
     private void setEdt_SearchAdvanceFunctions () {
 
-        edt_search.setOnClickListener(new View.OnClickListener() {
-            @Override public void onClick(View v) {
-                if (!hasHiddenNavAndStatusBar)
-                {
+        edt_search.setOnClickListener(v -> {
+            if (!hasHiddenNavAndStatusBar)
+            {
 //                    fullScreenManager.hideNavAndStatusBar_After(1000);
-                    makeFullScreenAfter(1000);
-                    hasHiddenNavAndStatusBar = true;
-                }
-                if (!isOnSearchMode) {
-                    searchModeManager.turn_ON();
-                    rcv_search_adapter.isSearching(true);
-                    isOnSearchMode = true;
-                }
+                makeFullScreenAfter(1000);
+                hasHiddenNavAndStatusBar = true;
+            }
+            if (!isOnSearchMode) {
+                searchModeManager.turn_ON();
+                rcv_search_adapter.isSearching(true);
+                isOnSearchMode = true;
             }
         });
 
 
-        edt_search.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (!hasHiddenNavAndStatusBar)
-                {
+        edt_search.setOnFocusChangeListener((v, hasFocus) -> {
+            if (!hasHiddenNavAndStatusBar)
+            {
 //                    fullScreenManager.hideNavAndStatusBar_After(1000);
-                    makeFullScreenAfter(1000);
-                    hasHiddenNavAndStatusBar = true;
-                }
+                makeFullScreenAfter(1000);
+                hasHiddenNavAndStatusBar = true;
             }
         });
 
         edt_search.setOnHideVirtualKeyboardListener(
-                new VirtualKeyBoardSensor.OnHideVirtualKeyboardListener() {
-                    @Override public void onHide() {
+                () -> {
 //                        fullScreenManager.hideNavAndStatusBar();
-                        makeFullScreen();
-                        hasHiddenNavAndStatusBar = false;
-                    }
+                    makeFullScreen();
+                    hasHiddenNavAndStatusBar = false;
                 });
 
     }
@@ -669,6 +606,7 @@ class SearchModeManager {
         });
 
     }
+
 
     public void setViewsOfSearchMode (final View... searching_views) {
         searchView.addAll(Arrays.asList(searching_views));
