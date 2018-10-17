@@ -1,35 +1,42 @@
 package phamf.com.chemicalapp.Supporter;
 
-import android.content.Context;
 import android.content.res.Resources;
-import android.util.DisplayMetrics;
-import android.view.Display;
-import android.view.WindowManager;
 
 public class UnitConverter {
 
-    public static final int D5 = DpToPixel(5);
+    static float density;
 
-    public static final int D10 = DpToPixel(10);
+    public static final int _5dp;
 
-    public static final int D15 = DpToPixel(15);
+    public static final int _10dp;
 
-    public static final int D25 = DpToPixel(25);
+    public static final int _20dp;
 
-    public static final int D30 = DpToPixel(30);
+    public static final int _30dp;
 
-    public static final int D50 = DpToPixel(50);
+    public static final int _50dp;
 
-    public static final int D100 = DpToPixel(100);
+    public static final int _100dp;
 
 
-
-    static int density = (int) Resources.getSystem().getDisplayMetrics().density;
+    static {
+        density = Resources.getSystem().getDisplayMetrics().density;
+        _5dp = DpToPixel(5);
+        _10dp = DpToPixel(10);
+        _20dp = DpToPixel(20);
+        _30dp = DpToPixel(30);
+        _50dp = DpToPixel(50);
+        _100dp = DpToPixel(100);
+    }
 
     public static int DpToPixel (int dp) {
-        int pixel = dp * density;
+        int pixel = Math.round(dp * density);
         return pixel;
     }
 
+    public static int PixelToDp (int pixel) {
+        int dp = Math.round(pixel / density);
+        return pixel;
+    }
 
 }

@@ -13,9 +13,7 @@ public class FadedInAnim extends Animation {
 
     private FadedInAnim.FadedInAnimListener listener;
 
-
     private ArrayList<View> views = new ArrayList<>();
-
 
     public FadedInAnim(View... views) {
         this.views.addAll(Arrays.asList(views));

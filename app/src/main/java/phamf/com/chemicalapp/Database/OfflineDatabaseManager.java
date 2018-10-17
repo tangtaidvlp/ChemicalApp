@@ -11,13 +11,12 @@ import io.realm.RealmResults;
 
 public class OfflineDatabaseManager  {
 
-    Realm realm;
+    private Realm realm;
 
     public OfflineDatabaseManager (Context context) {
         Realm.init(context);
-        realm = Realm.getInstance(new RealmConfiguration.Builder().name("database.realm").schemaVersion(0).build());
+        realm = Realm.getInstance(new RealmConfiguration.Builder().name("database.realm").schemaVersion(6).build());
     }
-
 
     public <E extends RealmObject> RealmResults<E> readAllDataOf(Class<E> dataType) {
         return realm.where(dataType).findAll();
@@ -27,7 +26,7 @@ public class OfflineDatabaseManager  {
         return realm.where(dataType).equalTo(whereField, value).findAll();
     }
 
-    public <E extends RealmObject> void addOrUpdateDataOf (Class<E> dataType, Collection<E> value) {
+        public <E extends RealmObject> void addOrUpdateDataOf (Class<E> dataType, Collection<E> value) {
         realm.beginTransaction();
         realm.insertOrUpdate(value);
         realm.commitTransaction();
@@ -44,14 +43,22 @@ public class OfflineDatabaseManager  {
         results.deleteAllFromRealm();
     }
 
-    public <E extends RealmObject> void deleteSomeDataOf(Class<E> dataType) {
-        RealmResults<E> results = realm.where(dataType).findAll();
+    public <E extends RealmObject> void deleteSomeDataOf(Class<E> dataType, String field, int value) {
+        RealmResults<E> results = realm.where(dataType).equalTo(field, value).findAll();
         results.deleteAllFromRealm();
     }
 
-    public void close () {
-        if (!realm.isClosed())
-        realm.close();
+    public <E extends RealmObject> E readOneOf (Class<E> dataType) {
+        E result = realm.where(dataType).findFirst();
+        return result;
+    }
+
+    public void beginTransaction () {
+        realm.beginTransaction();
+    }
+
+    public void commitTransaction () {
+        realm.commitTransaction();
     }
 
 

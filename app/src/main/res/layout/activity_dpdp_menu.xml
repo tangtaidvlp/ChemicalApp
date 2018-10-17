@@ -2,6 +2,7 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/parent_dpdp_menu_activity"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/background_lesson_menu"
@@ -60,5 +61,22 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="1.0" />
+
+    <TextView
+        android:id="@+id/bg_night_mode_dpdp_menu"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:alpha="0.25"
+        android:background="#ff8800"
+        android:clickable="false"
+        android:contextClickable="false"
+        android:filterTouchesWhenObscured="false"
+        android:focusableInTouchMode="false"
+        android:linksClickable="false"
+        android:longClickable="false"
+        android:visibility="visible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </android.support.constraint.ConstraintLayout>

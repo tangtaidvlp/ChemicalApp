@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="ViewPagerIndicator">
+
+        <attr name= "normal_radius" format="dimension"/>
+        <attr name="seleted_radius" format="dimension"/>
+        <attr name="distance_between_two_dots" format="dimension"/>
+        <attr name="normal_color" format="color"/>
+        <attr name="selected_color" format="color"/>
+        <attr name="dot_count" format="integer"/>
+        <attr name="wrap_width" format="boolean"/>
+        <attr name="wrap_height" format="boolean"/>
+        <attr name="hasTitle" format="boolean" />
+        <attr name="wantShowText" format ="boolean" />
+        <attr name="normal_title_color" format="color"/>
+        <attr name="selected_title_color" format="color"/>
+        <attr name="orientation" format="boolean">
+            <flag name="horizontal" value="1" />
+            <flag name="vertical" value="2" />
+        </attr>
+
+    </declare-styleable>
+</resources>

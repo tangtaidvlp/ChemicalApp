@@ -1,4 +1,4 @@
-package phamf.com.chemicalapp.Supporter;
+package phamf.com.chemicalapp.Manager;
 
 import android.content.res.AssetManager;
 import android.graphics.Typeface;

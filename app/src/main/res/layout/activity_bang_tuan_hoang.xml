@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="fill_parent"
+    tools:context="phamf.com.chemicalapp.BangTuanHoangActivity">
+
+    <HorizontalScrollView
+        android:id="@+id/parent_bangtuanhoan_activity"
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent">
+
+        <FrameLayout
+            android:layout_width="fill_parent"
+            android:layout_height="match_parent">
+
+
+            <LinearLayout
+                android:id="@+id/ln_bth_gridview_Parent"
+                android:layout_width="500dp"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <GridView
+                    android:id="@+id/grv_bang_tuan_hoan"
+                    android:layout_width="wrap_content"
+                    android:layout_marginLeft="3dp"
+                    android:layout_height="fill_parent"
+                    android:stretchMode="columnWidth"
+                    android:verticalSpacing="3dp"
+                    android:horizontalSpacing="3dp"
+                    android:numColumns="18"
+                    >
+
+                </GridView>
+
+
+            </LinearLayout>
+
+
+        </FrameLayout>
+
+    </HorizontalScrollView>
+
+    <RelativeLayout
+        android:id="@+id/bangtuanhoan_search_chem_element_view_parent"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        >
+
+        <TextView
+            android:id="@+id/bg_night_mode_bang_tuan_hoan"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:alpha="0.25"
+            android:background="#ff8800"
+            android:clickable="false"
+            android:contextClickable="false"
+            android:filterTouchesWhenObscured="false"
+            android:focusableInTouchMode="false"
+            android:linksClickable="false"
+            android:longClickable="false"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/top_background_search"
+            android:layout_width="wrap_content"
+            android:layout_height="52dp"
+            android:background="@drawable/background_search_view"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.0" />
+
+        <phamf.com.chemicalapp.CustomView.VirtualKeyBoardSensor
+            android:id="@+id/edt_bangtuanhoan_search"
+            android:layout_marginTop="4dp"
+            android:layout_width="343dp"
+            android:layout_height="42dp"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="8dp"
+            android:layout_toEndOf="@+id/bg_search_icon"
+            android:background="@android:color/transparent"
+            android:ems="10"
+            android:fontFamily="@font/comfortaa_light"
+            android:hint="Na - Natri"
+            android:inputType="textPersonName"
+            android:textColor="#ffffff"
+            android:textColorHint="@color/Hint_search_color"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/bg_edt_search"
+            android:layout_width="match_parent"
+            android:layout_height="2dp"
+            android:layout_alignBottom="@+id/edt_bangtuanhoan_search"
+            android:layout_alignParentStart="true"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="10dp"
+            android:background="#ffffff" />
+
+        <ImageView
+            android:id="@+id/bg_search_icon"
+            android:layout_width="27dp"
+            android:layout_height="26dp"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="15dp"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/search_icon_2" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rcv_bangtuanhoan_chem_element_search"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/top_background_search"
+            android:background="@drawable/background_search_view"
+            android:minHeight="200dp"
+            android:layout_marginBottom="100dp"
+            />
+
+        <Button
+            android:id="@+id/btn_top_bangtuanhoan_turn_off_search"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginEnd="17dp"
+            android:layout_marginTop="73dp"
+            android:background="@drawable/background_index_lesson" />
+
+
+    </RelativeLayout>
+
+    <Button
+        android:id="@+id/btn_bangtuanhoan_back"
+        android:layout_width="70dp"
+        android:layout_height="100dp"
+        android:layout_marginBottom="6dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:background="@drawable/return_bottom_button"
+        android:gravity="right|bottom" />
+
+    <Button
+        android:id="@+id/btn_bottom_bangtuanhoan_search"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_marginRight="20dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="124dp"
+        android:background="@drawable/background_index_lesson"
+        android:gravity="right|bottom" />
+
+</RelativeLayout>

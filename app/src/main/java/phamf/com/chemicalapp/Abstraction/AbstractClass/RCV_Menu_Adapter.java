@@ -1,12 +1,9 @@
-package phamf.com.chemicalapp.Abstraction;
+package phamf.com.chemicalapp.Abstraction.AbstractClass;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -15,21 +12,22 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import phamf.com.chemicalapp.Abstraction.Interface.Menuable;
 import phamf.com.chemicalapp.R;
-import phamf.com.chemicalapp.Supporter.FontManager;
+import phamf.com.chemicalapp.Manager.FontManager;
 
 public abstract class RCV_Menu_Adapter<T extends Menuable> extends RecyclerView.Adapter<RCV_Menu_Adapter.DataViewHolder>{
 
-    private Context context;
+    protected Context context;
 
 
-    private RecyclerView rcv_menu;
+    protected RecyclerView rcv_menu;
 
 
-    private List<T> list;
+    protected List<T> list;
 
 
-    private OnItemClickListener<T> itemClickListener;
+    protected OnItemClickListener<T> itemClickListener;
 
 
     public RCV_Menu_Adapter(Context context) {
@@ -47,21 +45,27 @@ public abstract class RCV_Menu_Adapter<T extends Menuable> extends RecyclerView.
         }
     };
 
+    public abstract View create_ViewHolder (ViewGroup parent, int viewType);
 
+    public abstract void bind_ViewHolder(@NonNull View itemView, T item);
 
     @NonNull
     @Override
-    public DataViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.child_menu_view, parent, false);
+    public RCV_Menu_Adapter.DataViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+//        View view = LayoutInflater.from(context).inflate(R.layout.child_menu_view, parent, false);
+//        view.setOnClickListener(onClickListener);
+        View view = create_ViewHolder(parent, viewType);
         view.setOnClickListener(onClickListener);
         return new DataViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull RCV_Menu_Adapter.DataViewHolder holder, int position) {
-        T chapter = list.get(position);
-        holder.txt_index.setText(String.valueOf(chapter.getId()));
-        holder.txt_name.setText(chapter.getName());
+
+//        T chapter = list.get(position);
+//        holder.txt_index.setText(String.valueOf(chapter.getId()));
+//        holder.txt_name.setText(chapter.getName());
+        bind_ViewHolder(holder.itemView, list.get(position));
     }
 
     @Override
@@ -95,9 +99,13 @@ public abstract class RCV_Menu_Adapter<T extends Menuable> extends RecyclerView.
     }
 
     public class DataViewHolder extends RecyclerView.ViewHolder {
+
         TextView txt_name, txt_index;
+        public View itemView;
+
         public DataViewHolder(View itemView) {
             super(itemView);
+            this.itemView = itemView;
             txt_index = itemView.findViewById(R.id.txt_item_index);
             txt_name = itemView.findViewById(R.id.txt_item_name);
             txt_index.setTypeface(FontManager.arial);

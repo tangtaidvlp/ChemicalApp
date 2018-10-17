@@ -10,18 +10,17 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.widget.EditText;
 
+/**
+ * This edittext has a
+ */
 public class VirtualKeyBoardSensor extends android.support.v7.widget.AppCompatEditText {
 
   private OnHideVirtualKeyboardListener onHideListener;
 
   private OnTextChangeLite liteOnTextChangeListener;
 
-
-
-
   public VirtualKeyBoardSensor(Context context) {
     super(context);
-
       addTextChangedListener(new TextWatcher() {
           @Override
           public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -40,11 +39,7 @@ public class VirtualKeyBoardSensor extends android.support.v7.widget.AppCompatEd
 
           }
       });
-
-
-
   }
-
 
   public VirtualKeyBoardSensor(Context context, @Nullable AttributeSet attrs) {
     super(context, attrs);
@@ -68,17 +63,13 @@ public class VirtualKeyBoardSensor extends android.support.v7.widget.AppCompatEd
     });
   }
 
-
-
   public void setOnHideVirtualKeyboardListener (OnHideVirtualKeyboardListener listener) {
     this.onHideListener = listener;
   }
 
-
   public void addLiteTextChangeListener (OnTextChangeLite onTextChangeListener) {
-      this.liteOnTextChangeListener = liteOnTextChangeListener;
+      this.liteOnTextChangeListener = onTextChangeListener;
   }
-
 
 
   /** Catch event user click turn off virtual keyboard **/

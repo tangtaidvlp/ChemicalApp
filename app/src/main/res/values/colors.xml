@@ -5,4 +5,7 @@
     <color name="colorAccent">#FF4081</color>
     <color name="TextTitleColor">#c70202</color>
     <color name="Hint_search_color">#e0a8a8</color>
+    <color name="BackgroundWeakBlue">#bec7f6</color>
+    <color name="QuickSearchBG">#e78989</color>
+    <color name="normal_dot_color">#54cd3f</color>
 </resources>

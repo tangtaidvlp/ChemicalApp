@@ -1,4 +1,4 @@
-package phamf.com.chemicalapp.Abstraction;
+package phamf.com.chemicalapp.Abstraction.Interface;
 
 public interface Menuable {
 

@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import phamf.com.chemicalapp.Abstraction.AbstractClass.RCV_Menu_Adapter;
+import phamf.com.chemicalapp.Abstraction.Interface.IRecentLessonActivity;
 import phamf.com.chemicalapp.Adapter.Lesson_Menu_Adapter;
 import phamf.com.chemicalapp.Manager.AppThemeManager;
 import phamf.com.chemicalapp.Manager.RecentSearching_CE_Data_Manager;
@@ -22,11 +23,12 @@ import phamf.com.chemicalapp.RO_Model.RO_Lesson;
 
 
 /**
+ * Presenter
  * @see RecentLessonActivityPresenter
  */
-public class RecentLessonsActivity extends AppCompatActivity implements RecentLessonActivityPresenter.DataLoadListener {
 
-    RecentLessonActivityPresenter activityPresenter;
+public class RecentLessonsActivity extends AppCompatActivity implements IRecentLessonActivity.View, RecentLessonActivityPresenter.DataLoadListener {
+
 
     @BindView(R.id.rcv_recent_lesson_menu) RecyclerView rcv_recent_lesson_menu;
     Lesson_Menu_Adapter rcv_recent_lesson_menu_adapter;
@@ -38,6 +40,8 @@ public class RecentLessonsActivity extends AppCompatActivity implements RecentLe
     @BindView(R.id.bg_night_mode_recent_learning_lesson) TextView bg_night_mode;
 
     @BindView(R.id.btn_recent_lesson_back) Button btn_back;
+
+    private RecentLessonActivityPresenter activityPresenter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,7 +69,7 @@ public class RecentLessonsActivity extends AppCompatActivity implements RecentLe
         activityPresenter.pushCachingData();
     }
 
-    private void addControl() {
+    public void addControl() {
         rcv_recent_lesson_menu_adapter = new Lesson_Menu_Adapter(this);
         rcv_recent_lesson_menu_adapter.adaptFor(rcv_recent_lesson_menu);
 
@@ -76,26 +80,18 @@ public class RecentLessonsActivity extends AppCompatActivity implements RecentLe
         }
     }
 
-    private void addEvent() {
-        rcv_recent_lesson_menu_adapter.setOnItemClickListener(new RCV_Menu_Adapter.OnItemClickListener<RO_Lesson>() {
-            @Override
-            public void onItemClickListener(RO_Lesson item) {
-                Intent intent = new Intent(RecentLessonsActivity.this, LessonActivity.class);
-                intent.putExtra(LessonMenuActivity.LESSON_NAME, item);
-                startActivity(intent);
-                activityPresenter.bringToTop(item);
-            }
+    public void addEvent() {
+        rcv_recent_lesson_menu_adapter.setOnItemClickListener(item -> {
+            Intent intent = new Intent(RecentLessonsActivity.this, LessonActivity.class);
+            intent.putExtra(LessonMenuActivity.LESSON_NAME, item);
+            startActivity(intent);
+            activityPresenter.bringToTop(item);
         });
 
-        btn_back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
+        btn_back.setOnClickListener(v -> finish());
     }
 
-    private void setTheme () {
+    public void setTheme () {
         if (AppThemeManager.isCustomingTheme) {
             if (AppThemeManager.isUsingColorBackground)
                 base_view.setBackgroundColor(AppThemeManager.getBackgroundColor());

@@ -18,6 +18,10 @@ public class OrganicMolecule {
 
     ArrayList<Isomerism> isomerisms;
 
+    public OrganicMolecule() {
+
+    }
+
     public String getMolecule_formula() {
         return molecule_formula;
     }
@@ -76,4 +80,11 @@ public class OrganicMolecule {
         this.isomerisms = isomerisms;
     }
 
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 }

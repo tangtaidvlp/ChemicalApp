@@ -13,11 +13,14 @@ import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.view.animation.Animation;
 import android.view.animation.AnimationSet;
+import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ImageButton;
+import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -29,10 +32,12 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import io.realm.Realm;
+import phamf.com.chemicalapp.Abstraction.Interface.IMainActivity;
 import phamf.com.chemicalapp.Abstraction.Interface.OnThemeChangeListener;
-import phamf.com.chemicalapp.Adapter.Search_List_Adapter;
+import phamf.com.chemicalapp.Adapter.Search_CE_RCV_Adapter;
 import phamf.com.chemicalapp.CustomAnimation.FadedInAnim;
 import phamf.com.chemicalapp.CustomAnimation.FadedOutAnim;
+import phamf.com.chemicalapp.CustomView.ViewPagerIndicator;
 import phamf.com.chemicalapp.Manager.AppThemeManager;
 import phamf.com.chemicalapp.Manager.FloatingSearchViewManager;
 import phamf.com.chemicalapp.Presenter.MainActivityPresenter;
@@ -44,13 +49,12 @@ import phamf.com.chemicalapp.Manager.FullScreenManager;
 
 
 /**
+ * Presenter
  * @see MainActivityPresenter
  */
-public class MainActivity extends FullScreenActivity implements MainActivityPresenter.DataLoadListener, OnThemeChangeListener, MainActivityPresenter.OnUpdateCheckedListener {
-
+public class MainActivity extends FullScreenActivity implements IMainActivity.View, MainActivityPresenter.DataLoadListener, OnThemeChangeListener, MainActivityPresenter.OnUpdateCheckedListener {
 
     static final int CODE_DRAW_OVER_OTHER_APP_PERMISSION = 2084;
-
 
     @BindView(R.id.txt_lesson) TextView txt_lesson;
 
@@ -62,33 +66,34 @@ public class MainActivity extends FullScreenActivity implements MainActivityPres
 
     @BindView(R.id.txt_quick_search) TextView txt_quick_search;
 
+    @BindView(R.id.bg_escape_search_mode) TextView bg_escape_search_mode;
+
     @BindView(R.id.btn_bangtuanhoan) ImageButton btn_bangtuanhoang;
 
     @BindView(R.id.btn_dongphan_danhphap) ImageButton btn_dongphan_danhphap;
 
     @BindView(R.id.btn_lesson) ImageButton btn_lesson;
 
-    @BindView(R.id.btn_search) Button btn_search;
-
     @BindView(R.id.btn_recent_lesson) ImageButton btn_recent_lesson;
-
-    @BindView(R.id.btn_setting) Button btn_setting;
-
-    @BindView(R.id.edt_search) VirtualKeyBoardSensor edt_search;
-
-    @BindView(R.id.btn_turnOff_search) Button btn_turnOff_search;
 
     @BindView(R.id.btn_quick_search) ImageButton btn_quick_search;
 
-    @BindView(R.id.drawer_layout) DrawerLayout drawer_Layout;
+    @BindView(R.id.btn_search) Button btn_search;
+
+    @BindView(R.id.btn_setting) Button btn_setting;
+
+    @BindView(R.id.btn_turnOff_search) Button btn_turnOff_search;
+
+    @BindView(R.id.edt_search) VirtualKeyBoardSensor edt_search;
+
+    @BindView(R.id.main_activity_drawer_layout) DrawerLayout drawer_Layout;
 
     @BindView(R.id.nav_view) NavigationView nav_view;
 
-    @BindView(R.id.bg_escape_search_mode) TextView bg_escape_search_mode;
-
     @BindView(R.id.rcv_search) RecyclerView rcv_search;
 
-    private Search_List_Adapter rcv_search_adapter;
+    @BindView(R.id.test) ViewPagerIndicator indicator;
+    private Search_CE_RCV_Adapter rcv_search_adapter;
 
 
 
@@ -118,19 +123,21 @@ public class MainActivity extends FullScreenActivity implements MainActivityPres
 
     @BindView(R.id.btn_background_color_6) Button btn_background_color_6;
 
-    @BindView(R.id.sw_night_mode) Switch sw_night_mode;
-
-    @BindView(R.id.bg_night_mode) TextView bg_night_mode;
+    @BindView(R.id.btn_update) Button btn_update;
 
     @BindView(R.id.btn_set_as_defaut) Button btn_set_as_defaut;
 
-    @BindView(R.id.btn_update) Button btn_update;
+    @BindView(R.id.btn_top_turn_off_search) Button btn_top_turn_off_search_mode;
+
+    @BindView(R.id.search_chem_equation_view_parent) RelativeLayout search_view_parent;
+
+    @BindView(R.id.bg_night_mode) TextView bg_night_mode;
 
     @BindView(R.id.txt_update_status) TextView txt_update_status;
 
     @BindView(R.id.txt_update_version) TextView txt_update_version;
 
-
+    @BindView(R.id.sw_night_mode) Switch sw_night_mode;
 
 
     /**
@@ -139,24 +146,17 @@ public class MainActivity extends FullScreenActivity implements MainActivityPres
      */
     private boolean hasHiddenNavAndStatusBar;
 
-
     private boolean isOnSearchMode;
-
 
     private InputMethodManager virtualKeyboardManager;
 
-
-    private SearchModeManager searchModeManager;
-
-
     private FloatingSearchViewManager floatingSearchViewManager;
-
 
     private MainActivityPresenter activityPresenter;
 
-
     private boolean updateAvailable;
 
+    Animation fade_out, fade_in;
 
     @SuppressLint("HandlerLeak")
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -184,6 +184,8 @@ public class MainActivity extends FullScreenActivity implements MainActivityPres
 
         createNecessaryInfo();
 
+        loadAnim();
+
         addControl();
 
         activityPresenter.loadData();
@@ -192,31 +194,23 @@ public class MainActivity extends FullScreenActivity implements MainActivityPres
 
         activityPresenter.requirePermission(CODE_DRAW_OVER_OTHER_APP_PERMISSION);
 
-        activityPresenter.checkUpdateStatus();
+//        activityPresenter.checkUpdateStatus();
 
     }
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == CODE_DRAW_OVER_OTHER_APP_PERMISSION) {
 
             if (resultCode == RESULT_OK) {
-
                 Toast.makeText(this, "You're now able to use floating search view", Toast.LENGTH_SHORT).show();
-
             } else {
-
                 finish();
-
             }
         } else {
-
             super.onActivityResult(requestCode, resultCode, data);
-
         }
     }
-
 
     @Override
     protected void onPause() {
@@ -225,15 +219,13 @@ public class MainActivity extends FullScreenActivity implements MainActivityPres
         activityPresenter.saveTheme();
     }
 
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
     }
 
-
     private void addControl () {
-        rcv_search_adapter = new Search_List_Adapter(this);
+        rcv_search_adapter = new Search_CE_RCV_Adapter(this);
         rcv_search_adapter.adaptFor(rcv_search);
         rcv_search_adapter.observe(edt_search);
         setEdt_SearchAdvanceFunctions();
@@ -325,7 +317,6 @@ public class MainActivity extends FullScreenActivity implements MainActivityPres
         setTheme();
     }
 
-
     @OnClick({R.id.btn_art_theme, R.id.btn_dark_theme, R.id.btn_normal_theme})
     public void onThemeButtonsClick (Button v) {
         int theme = 0;
@@ -349,34 +340,44 @@ public class MainActivity extends FullScreenActivity implements MainActivityPres
         setTheme();
     }
 
+    public void createNecessaryInfo() {
+        FontManager.createFont(getAssets());
 
-    private void addEvent () {
+        setFont();
+
+        virtualKeyboardManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+
+        floatingSearchViewManager = new FloatingSearchViewManager(MainActivity.this);
+    }
+
+    public void addEvent () {
 
         btn_search.setOnClickListener(v -> {
             if (!isOnSearchMode) {
                 showSoftKeyboard();
                 rcv_search_adapter.isSearching(true);
-                searchModeManager.turn_ON();
+                search_view_parent.startAnimation(fade_in);
                 isOnSearchMode = true;
             }
         });
 
         bg_escape_search_mode.setOnClickListener(v -> {
-            searchModeManager.turn_OFF();
+            search_view_parent.startAnimation(fade_out);
             edt_search.setText("");
             rcv_search_adapter.isSearching(false);
             hideSoftKeyboard(MainActivity.this);
             isOnSearchMode = false;
         });
 
-        btn_recent_lesson.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, RecentLessonsActivity.class)));
+        btn_top_turn_off_search_mode.setOnClickListener(v -> bg_escape_search_mode.performClick());
 
+        btn_recent_lesson.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, RecentLessonsActivity.class)));
 
         btn_bangtuanhoang.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, BangTuanHoangActivity.class)));
 
 
         btn_turnOff_search.setOnClickListener(v -> {
-            searchModeManager.turn_OFF();
+            search_view_parent.startAnimation(fade_out);
             edt_search.setText("");
             rcv_search_adapter.isSearching(false);
         });
@@ -404,7 +405,7 @@ public class MainActivity extends FullScreenActivity implements MainActivityPres
             rcv_search_adapter.notifyDataSetChanged();
             // Update the top in database
             activityPresenter.bringToTop(equation);
-            //
+
             bg_escape_search_mode.performClick();
             Intent intent = new Intent(MainActivity.this, ChemicalEquationActivity.class);
             intent.putExtra(ChemicalEquationActivity.CHEMICAL_EQUATION, equation);
@@ -417,8 +418,10 @@ public class MainActivity extends FullScreenActivity implements MainActivityPres
 
 
         btn_update.setOnClickListener (v -> {
-            activityPresenter.update_CE_OFFDB();
-            activityPresenter.update_Chapter_OFFDB();
+            activityPresenter.updateAll_CE_OFFDB();
+            activityPresenter.updateAll_Chapter_OFFDB();
+            startActivity(new Intent(MainActivity.this, MainActivity.class));
+            finish();
         });
 
 
@@ -435,24 +438,38 @@ public class MainActivity extends FullScreenActivity implements MainActivityPres
 
     }
 
+    public void loadAnim () {
+        fade_in = AnimationUtils.loadAnimation(this, R.anim.fade_in);
+        fade_out = AnimationUtils.loadAnimation(this, R.anim.fade_out);
+        fade_in.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+                search_view_parent.setVisibility(View.VISIBLE);
+            }
 
-    private void createNecessaryInfo() {
-        FontManager.createFont(getAssets());
+            public void onAnimationEnd(Animation animation) {
 
-        setFont();
+            }
+            public void onAnimationRepeat(Animation animation) {
 
-        virtualKeyboardManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+            }
+        });
+        fade_out.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                search_view_parent.setVisibility(View.GONE);
+            }
 
-        searchModeManager = new SearchModeManager(this, btn_turnOff_search, btn_bangtuanhoang);
-        searchModeManager.setViewsOfSearchMode(2, rcv_search, bg_escape_search_mode, btn_turnOff_search);
-        searchModeManager.setStartButtonsOfSearchMode(btn_search);
-        searchModeManager.setDuration(500);
+            public void onAnimationStart(Animation animation) {
 
-        floatingSearchViewManager = new FloatingSearchViewManager(MainActivity.this);
+            }
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
     }
 
-
-    private void setFont () {
+    public void setFont () {
         txt_lesson.setTypeface(FontManager.myriad_pro_bold);
         txt_recent_lesson.setTypeface(FontManager.myriad_pro_bold);
         txt_dongphan_danhphap.setTypeface(FontManager.myriad_pro_bold);
@@ -461,7 +478,6 @@ public class MainActivity extends FullScreenActivity implements MainActivityPres
 
         edt_search.setTypeface(FontManager.myriad_pro_bold);
     }
-
 
     public void setTheme() {
         if (AppThemeManager.isUsingAvailableThemes || AppThemeManager.isCustomingTheme) {
@@ -479,8 +495,7 @@ public class MainActivity extends FullScreenActivity implements MainActivityPres
         }
     }
 
-
-    private void setEdt_SearchAdvanceFunctions () {
+    public void setEdt_SearchAdvanceFunctions () {
 
         edt_search.setOnClickListener(v -> {
             if (!hasHiddenNavAndStatusBar)
@@ -490,7 +505,7 @@ public class MainActivity extends FullScreenActivity implements MainActivityPres
                 hasHiddenNavAndStatusBar = true;
             }
             if (!isOnSearchMode) {
-                searchModeManager.turn_ON();
+                search_view_parent.startAnimation(fade_in);
                 rcv_search_adapter.isSearching(true);
                 isOnSearchMode = true;
             }
@@ -515,19 +530,17 @@ public class MainActivity extends FullScreenActivity implements MainActivityPres
 
     }
 
-
     public void hideSoftKeyboard(Activity activity) {
         virtualKeyboardManager.hideSoftInputFromWindow(Objects.requireNonNull(activity.getCurrentFocus()).getWindowToken(), 0);
     }
-
 
     public void showSoftKeyboard () {
         virtualKeyboardManager.toggleSoftInput(0, InputMethodManager.SHOW_IMPLICIT);
     }
 
-
     @Override
     public void onDataLoadSuccess(ArrayList<RO_ChemicalEquation> ro_chemicalEquations) {
+        Log.e("Length ", ro_chemicalEquations.size() + " elements");
         rcv_search_adapter.setData(ro_chemicalEquations);
     }
 
@@ -559,92 +572,6 @@ public class MainActivity extends FullScreenActivity implements MainActivityPres
         }
 
         txt_update_version.setText("1." + version);
-    }
-
-
-}
-
-
-class SearchModeManager {
-
-    private FadedInAnim showSearchButtonAnim, showSearchViewAnim;
-
-    private FadedOutAnim hideSearchButtonAnim, hideSearchViewAnim;
-
-    AnimationSet setOn, setOff;
-
-    View startAnimview1, startAnimView2;
-
-    ArrayList<View> searchView = new ArrayList<>();
-    ArrayList<View> buttonView = new ArrayList<>();
-
-    // Two of this params startAnimView1, startAnimView2 is using to start Animation
-    // because animation just can be started by view on screen
-    SearchModeManager (Context context, View startAnimView1, View startAnimView2) {
-        setOn = new AnimationSet(context, null);
-        setOff = new AnimationSet(context, null);
-        this.startAnimview1 = startAnimView1;
-        this.startAnimView2 = startAnimView2;
-    }
-
-    // the position of turn off button index in seaching_views params
-    public void setViewsOfSearchMode (final int turnOffButtonIndex, final View... searching_views) {
-
-        searchView.addAll(Arrays.asList(searching_views));
-        showSearchViewAnim = new FadedInAnim(searching_views);
-        hideSearchViewAnim = new FadedOutAnim(searching_views);
-        hideSearchViewAnim.setOnAnimEndListener(new FadedOutAnim.FadedOutAnimListener() {
-            @Override
-            public void onStart() {
-
-            }
-
-            @Override
-            public void onEnd() {
-                searchView.get(turnOffButtonIndex).setVisibility(View.GONE);
-            }
-        });
-
-    }
-
-
-    public void setViewsOfSearchMode (final View... searching_views) {
-        searchView.addAll(Arrays.asList(searching_views));
-        showSearchViewAnim = new FadedInAnim(searching_views);
-        hideSearchViewAnim = new FadedOutAnim(searching_views);
-    }
-
-
-    public void setStartButtonsOfSearchMode (View... button_views) {
-        buttonView.addAll(Arrays.asList(button_views));
-        showSearchButtonAnim = new FadedInAnim(button_views);
-        hideSearchButtonAnim = new FadedOutAnim(button_views);
-    }
-
-
-    public void setDuration (int duration) {
-        showSearchButtonAnim.setDuration(duration);
-        showSearchViewAnim.setDuration(duration);
-        hideSearchButtonAnim.setDuration(duration);
-        hideSearchViewAnim.setDuration(duration);
-    }
-
-
-    public void turn_ON () {
-        for (View view : searchView) {
-            view.setVisibility(View.VISIBLE);
-        }
-        startAnimView2.startAnimation(showSearchViewAnim);
-        startAnimview1.startAnimation(hideSearchButtonAnim);
-    }
-
-
-    public void turn_OFF () {
-        for (View view : buttonView) {
-            view.setVisibility(View.VISIBLE);
-        }
-        startAnimView2.startAnimation(showSearchButtonAnim);
-        startAnimview1.startAnimation(hideSearchViewAnim);
     }
 
 }

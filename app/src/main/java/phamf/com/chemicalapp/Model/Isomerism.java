@@ -8,6 +8,8 @@ public class Isomerism {
 
     String normal_name;
 
+//    String type;
+
     String replace_name;
 
     int structure_image_id;
@@ -18,20 +20,29 @@ public class Isomerism {
 
     }
 
-    public Isomerism(String molecule_formula, String normal_name, String replace_name, int structure_image_id, int compact_structure_image_id) {
+    public Isomerism(/*String type,*/ String molecule_formula, String normal_name, String replace_name, int structure_image_id, int compact_structure_image_id) {
         this.molecule_formula = molecule_formula;
         this.normal_name = normal_name;
         this.replace_name = replace_name;
         this.structure_image_id = structure_image_id;
         this.compact_structure_image_id = compact_structure_image_id;
+//        this.type = type;
     }
+
+//    public void setType(@IsomerismType.Type String type) {
+//        this.type = type;
+//    }
+//
+//    public String getType() {
+//        return this.type;
+//    }
 
 
     public int getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId( int id) {
         this.id = id;
     }
 
@@ -74,4 +85,9 @@ public class Isomerism {
     public void setCompact_structure_image_id(int compact_structure_image_id) {
         this.compact_structure_image_id = compact_structure_image_id;
     }
+
+
 }
+
+
+

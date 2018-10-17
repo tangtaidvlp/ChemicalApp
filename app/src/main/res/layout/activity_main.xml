@@ -2,10 +2,12 @@
 <android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/drawer_layout"
+    android:id="@+id/main_activity_drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="phamf.com.chemicalapp.MainActivity">
+
+
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/pre_view"
@@ -26,7 +28,7 @@
             app:layout_constraintVertical_bias="0.0" />
 
         <ImageView
-            android:id="@+id/top_background_search2"
+            android:id="@+id/bottom_nav_background"
             android:layout_width="wrap_content"
             android:layout_height="48dp"
             android:background="@drawable/bot_background"
@@ -38,7 +40,7 @@
             app:layout_constraintVertical_bias="1.0" />
 
         <ImageView
-            android:id="@+id/imageView3"
+            android:id="@+id/bg_search_icon"
             android:layout_width="27dp"
             android:layout_height="26dp"
             android:layout_marginBottom="8dp"
@@ -53,83 +55,200 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.0" />
 
-        <ImageButton
-            android:id="@+id/btn_lesson"
-            android:layout_width="50dp"
-            android:layout_height="60dp"
-            android:layout_marginBottom="540dp"
-            android:layout_marginEnd="7dp"
-            android:layout_marginStart="13dp"
-            android:background="@drawable/lesson_icon"
+        <LinearLayout
+            android:id="@+id/linearLayout2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="50dp"
+            android:orientation="horizontal"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.023"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/top_background_search"
-            app:layout_constraintVertical_bias="0.388" />
+            app:layout_constraintVertical_bias="0.0">
 
-        <ImageButton
-            android:id="@+id/btn_lesson2"
-            android:layout_width="50dp"
-            android:layout_height="60dp"
-            android:layout_marginEnd="7dp"
-            android:layout_marginStart="13dp"
-            android:layout_marginTop="59dp"
-            android:background="@drawable/recent_lesson_icon"
+            <ImageButton
+                android:id="@+id/btn_lesson"
+                android:layout_width="50dp"
+                android:layout_height="60dp"
+                android:background="@drawable/lesson_icon"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.023"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/top_background_search"
+                app:layout_constraintVertical_bias="0.388" />
+
+            <TextView
+                android:id="@+id/txt_lesson"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="60dp"
+                android:text="Bài học"
+                android:textColor="@color/TextTitleColor"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
+                app:layout_constraintStart_toEndOf="@+id/btn_lesson"
+                app:layout_constraintTop_toBottomOf="@+id/top_background_search"
+                app:layout_constraintVertical_bias="0.0" />
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/linearLayout3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="50dp"
+            android:orientation="horizontal"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.023"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btn_lesson"
-            app:layout_constraintVertical_bias="0.002" />
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout2"
+            app:layout_constraintVertical_bias="0.0">
 
-        <ImageButton
-            android:id="@+id/btn_dongphan_danhphap"
-            android:layout_width="50dp"
-            android:layout_height="60dp"
-            android:layout_marginBottom="256dp"
-            android:layout_marginEnd="7dp"
-            android:layout_marginStart="13dp"
-            android:layout_marginTop="59dp"
-            android:background="@drawable/dongphan_danhphap_icon"
+            <ImageButton
+                android:id="@+id/btn_recent_lesson"
+                android:layout_width="50dp"
+                android:layout_height="60dp"
+                android:background="@drawable/recent_lesson_icon" />
+
+            <TextView
+                android:id="@+id/txt_recent_lesson"
+                android:layout_width="wrap_content"
+                android:layout_height="32dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="60dp"
+                android:font="@font/arimo"
+                android:text="Bài học gần đây"
+                android:textColor="@color/TextTitleColor"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/linearLayout4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="268dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="50dp"
+            android:orientation="horizontal"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.023"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btn_lesson2"
-            app:layout_constraintVertical_bias="0.0" />
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout3"
+            app:layout_constraintVertical_bias="0.0">
 
-        <ImageButton
-            android:id="@+id/btn_quick_search"
-            android:layout_width="50dp"
-            android:layout_height="60dp"
-            android:layout_marginBottom="44dp"
-            android:layout_marginEnd="7dp"
-            android:layout_marginStart="13dp"
-            android:layout_marginTop="59dp"
-            android:background="@drawable/floating_search_icon"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.023"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btn_bangtuanhoan"
-            app:layout_constraintVertical_bias="0.0" />
+            <ImageButton
+                android:id="@+id/btn_dongphan_danhphap"
+                android:layout_width="50dp"
+                android:layout_height="60dp"
+                android:background="@drawable/dongphan_danhphap_icon" />
 
-        <ImageButton
-            android:id="@+id/btn_bangtuanhoan"
-            android:layout_width="50dp"
-            android:layout_height="60dp"
+            <TextView
+                android:id="@+id/txt_dongphan_danhphap"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="60dp"
+                android:font="@font/alef"
+                android:text="Đồng phân danh pháp"
+                android:textColor="@color/TextTitleColor"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/linearLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
-            android:layout_marginEnd="7dp"
-            android:layout_marginStart="13dp"
-            android:layout_marginTop="59dp"
-            android:background="@drawable/bang_tuan_hoang_icon"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="50dp"
+            android:orientation="horizontal"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.023"
+            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/btn_dongphan_danhphap"
-            app:layout_constraintVertical_bias="0.0" />
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout5"
+            app:layout_constraintVertical_bias="0.052">
+
+
+            <ImageButton
+                android:id="@+id/btn_quick_search"
+                android:layout_width="50dp"
+                android:layout_height="60dp"
+                android:background="@drawable/floating_search_icon" />
+
+            <TextView
+                android:id="@+id/txt_quick_search"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="60dp"
+                android:text="Search nhanh"
+                android:textColor="@color/TextTitleColor"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:id="@+id/linearLayout5"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginStart="30dp"
+            android:layout_marginTop="50dp"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout4"
+            app:layout_constraintVertical_bias="0.017">
+
+            <ImageButton
+                android:id="@+id/btn_bangtuanhoan"
+                android:layout_width="50dp"
+                android:layout_height="60dp"
+                android:background="@drawable/bang_tuan_hoang_icon" />
+
+
+            <TextView
+                android:id="@+id/txt_bangtuanhoang"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="60dp"
+                android:text="Bảng tuần hoàng"
+                android:textColor="@color/TextTitleColor"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+
+
+        </LinearLayout>
+
+
 
 
         <Button
@@ -149,7 +268,7 @@
             app:layout_constraintVertical_bias="0.9945" />
 
         <Button
-            android:id="@+id/btn_back"
+            android:id="@+id/btn_turnOff_search"
             android:layout_width="31dp"
             android:layout_height="30dp"
             android:layout_marginBottom="4dp"
@@ -195,109 +314,12 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.045" />
 
-        <TextView
-            android:id="@+id/txt_dongphan_danhphap"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="90dp"
-            android:font="@font/alef"
-            android:text="Đồng phân danh pháp"
-            android:textColor="@color/TextTitleColor"
-            android:textSize="22sp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.368"
-            app:layout_constraintStart_toEndOf="@+id/btn_dongphan_danhphap"
-            app:layout_constraintTop_toBottomOf="@+id/txt_recent_lesson"
-            app:layout_constraintVertical_bias="0.0" />
-
-        <TextView
-            android:id="@+id/txt_quick_search"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="42dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="90dp"
-            android:text="Search nhanh"
-            android:textColor="@color/TextTitleColor"
-            android:textSize="22sp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toTopOf="@+id/top_background_search2"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.212"
-            app:layout_constraintStart_toEndOf="@+id/btn_quick_search"
-            app:layout_constraintTop_toBottomOf="@+id/txt_bangtuanhoang"
-            app:layout_constraintVertical_bias="0.0" />
-
-        <TextView
-            android:id="@+id/txt_bangtuanhoang"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="90dp"
-            android:text="Bảng tuần hoàng"
-            android:textColor="@color/TextTitleColor"
-            android:textSize="22sp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.256"
-            app:layout_constraintStart_toEndOf="@+id/btn_bangtuanhoan"
-            app:layout_constraintTop_toBottomOf="@+id/txt_dongphan_danhphap"
-            app:layout_constraintVertical_bias="0.0" />
-
-        <TextView
-            android:id="@+id/txt_recent_lesson"
-            android:layout_width="wrap_content"
-            android:layout_height="32dp"
-            android:layout_marginBottom="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="48dp"
-            android:layout_marginTop="90dp"
-            android:font="@font/arimo"
-            android:text="Bài học gần đây"
-            android:textColor="@color/TextTitleColor"
-            android:textSize="22sp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toEndOf="@+id/btn_lesson2"
-            app:layout_constraintTop_toBottomOf="@+id/txt_lesson"
-            app:layout_constraintVertical_bias="0.0" />
-
-        <TextView
-            android:id="@+id/txt_lesson"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginStart="48dp"
-            android:layout_marginTop="42dp"
-            android:text="Bài học"
-            android:textColor="@color/TextTitleColor"
-            android:textSize="22sp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toEndOf="@+id/btn_lesson"
-            app:layout_constraintTop_toBottomOf="@+id/top_background_search"
-            app:layout_constraintVertical_bias="0.0" />
-
         <phamf.com.chemicalapp.CustomView.VirtualKeyBoardSensor
             android:id="@+id/edt_search"
             android:layout_width="0dp"
             android:layout_height="42dp"
             android:layout_marginBottom="8dp"
-            android:layout_marginEnd="8dp"
+            android:layout_marginEnd="15dp"
             android:layout_marginStart="10dp"
             android:layout_marginTop="4dp"
             android:background="@android:color/transparent"
@@ -310,26 +332,91 @@
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.007"
-            app:layout_constraintStart_toEndOf="@+id/imageView3"
+            app:layout_constraintStart_toEndOf="@+id/bg_search_icon"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintVertical_bias="0.0" />
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/rcv_search"
+
+        <RelativeLayout
+            android:id="@+id/search_chem_equation_view_parent"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_marginBottom="2dp"
-            android:background="@drawable/background_search_view"
-            android:paddingBottom="25dp"
-            android:visibility="invisible"
-            app:layout_constraintBottom_toTopOf="@+id/top_background_search2"
+            app:layout_constraintBottom_toTopOf="@+id/bottom_nav_background"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/edt_search" />
+            app:layout_constraintTop_toBottomOf="@+id/edt_search"
+            android:visibility="gone"
+            app:layout_constraintVertical_bias="1.0">
+
+            <TextView
+                android:id="@+id/bg_escape_search_mode"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_marginBottom="2dp"
+                android:alpha="0.5"
+                android:background="@drawable/black_background"
+                android:paddingBottom="25dp" />
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rcv_search"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/background_search_view"
+                android:foregroundGravity="top">
+
+            </android.support.v7.widget.RecyclerView>
+
+            <Button
+                android:id="@+id/btn_top_turn_off_search"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginEnd="11dp"
+                android:layout_marginTop="15dp"
+                android:background="@drawable/background_index_lesson" />
+
+        </RelativeLayout>
+
+        <phamf.com.chemicalapp.CustomView.ViewPagerIndicator
+            android:id="@+id/test"
+            android:layout_width="250dp"
+            android:layout_height="210dp"
+            android:layout_marginStart="80dp"
+            android:layout_marginTop="8dp"
+            app:distance_between_two_dots="30dp"
+            app:dot_count="2"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.581"
+            app:normal_color="@android:color/darker_gray"
+            app:normal_radius="5dp"
+            app:selected_color="@android:color/holo_red_light"
+            app:seleted_radius="10dp"
+            app:wrap_height="true"
+            app:wrap_width="true" />
+
+
 
     </android.support.constraint.ConstraintLayout>
+
+
+    <TextView
+        android:id="@+id/bg_night_mode"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:alpha="0.25"
+        android:background="#ff8800"
+        android:clickable="false"
+        android:contextClickable="false"
+        android:filterTouchesWhenObscured="false"
+        android:focusableInTouchMode="false"
+        android:linksClickable="false"
+        android:longClickable="false"
+        android:visibility="gone" />
 
     <android.support.design.widget.NavigationView
         android:id="@+id/nav_view"
@@ -340,9 +427,12 @@
         <include
             layout="@layout/nav_view"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="match_parent">
 
         </include>
 
     </android.support.design.widget.NavigationView>
+
+
+
 </android.support.v4.widget.DrawerLayout>

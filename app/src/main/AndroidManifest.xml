@@ -34,7 +34,12 @@
 
         <activity android:name=".LessonMenuActivity" />
         <activity android:name=".LessonActivity" />
-        <activity android:name=".DPDPMenuActivity"></activity>
+        <activity android:name=".DPDPMenuActivity" />
+        <activity android:name=".DPDPActivity" />
+        <activity android:name=".BangTuanHoangActivity" />
+        <activity android:name=".RecentLessonsActivity" />
+        <activity android:name=".ChemicalEquationActivity" />
+        <activity android:name=".ChemicalElementActivity"></activity>
     </application>
 
 </manifest>

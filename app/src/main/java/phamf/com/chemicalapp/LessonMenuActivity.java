@@ -1,6 +1,7 @@
 package phamf.com.chemicalapp;
 
 import android.content.Intent;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
@@ -9,27 +10,30 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
-import android.widget.Toast;
+import android.widget.TextView;
+
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import io.realm.RealmResults;
-import phamf.com.chemicalapp.Abstraction.RCV_Menu_Adapter;
+import phamf.com.chemicalapp.Abstraction.AbstractClass.RCV_Menu_Adapter;
+import phamf.com.chemicalapp.Abstraction.Interface.ILessonMenuActivity;
 import phamf.com.chemicalapp.Adapter.Chapter_Menu_Adapter;
 import phamf.com.chemicalapp.Adapter.Lesson_Menu_Adapter;
+import phamf.com.chemicalapp.Manager.AppThemeManager;
 import phamf.com.chemicalapp.Presenter.LessonMenuActivityPresenter;
 import phamf.com.chemicalapp.RO_Model.RO_Chapter;
 import phamf.com.chemicalapp.RO_Model.RO_Lesson;
+import phamf.com.chemicalapp.Manager.FullScreenManager;
 
 
-public class LessonMenuActivity extends AppCompatActivity {
+/**
+ * Presenter
+ * @see LessonMenuActivityPresenter
+ */
+public class LessonMenuActivity extends FullScreenActivity implements ILessonMenuActivity.View, LessonMenuActivityPresenter.DataLoadListener{
 
     public static final String LESSON_NAME = "lesson_name";
-
-    public static final String LESSON_INDEX = "lesson_index";
-
-    public static final String LESSON_CONTENT = "lesson_content";
-
 
 
     @BindView(R.id.rcv_chapter_menu) RecyclerView rcv_chapter_menu;
@@ -38,26 +42,41 @@ public class LessonMenuActivity extends AppCompatActivity {
     @BindView(R.id.rcv_lesson_menu) RecyclerView rcv_lesson_menu;
     Lesson_Menu_Adapter lesson_menu_adapter;
 
-    @BindView(R.id.btn_menu_back) Button btn_back;
+    @BindView(R.id.btn_lesson_menu_back) Button btn_back;
+
+    @BindView(R.id.btn_turn_on_chapter_menu) Button btn_turn_on_chapter_menu;
+
+    @BindView(R.id.txt_lesson_menu_title) TextView txt_title;
+
+    @BindView(R.id.bg_night_mode_lesson_menu) TextView bg_night_mode;
+
+    @BindView(R.id.parent_lesson_menu_activity) ConstraintLayout base_view;
+
+
+    Animation chapter_disappear, lesson_disappear;
+
+    Animation chapter_appear, lesson_appear;
+
 
     LessonMenuActivityPresenter activityPresenter;
-
-    Animation suft_right_fade_out;
-
-    Animation fade_in;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_lesson_menu);
 
         ButterKnife.bind(this);
 
-        overridePendingTransition(R.anim.fade_in, R.anim.fade_out);
+        overridePendingTransition(R.anim.fade_in , R.anim.fade_out);
 
         activityPresenter = new LessonMenuActivityPresenter(this);
+
+        activityPresenter.setOnDataLoadListener(this);
+
+        setTheme();
 
         loadAnim();
 
@@ -65,83 +84,128 @@ public class LessonMenuActivity extends AppCompatActivity {
 
         addEvent();
 
+        activityPresenter.loadData();
+
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        activityPresenter.pushCachingDataToDB();
+    }
 
-    private void addEvent() {
-        chapter_menu_adapter.setOnItemClickListener(new RCV_Menu_Adapter.OnItemClickListener<RO_Chapter>() {
-            @Override
-            public void onItemClickListener(RO_Chapter item) {
-                lesson_menu_adapter.setData(item.getLessons());
-                rcv_chapter_menu.startAnimation(suft_right_fade_out);
-                rcv_lesson_menu.startAnimation(fade_in);
-                rcv_chapter_menu.setVisibility(View.GONE);
-            }
+    @Override
+    public void onDataLoadedSuccess(ArrayList<RO_Chapter> data) {
+        chapter_menu_adapter.setData(data);
+    }
+
+    public void addControl() {
+        chapter_menu_adapter = new Chapter_Menu_Adapter(this);
+        chapter_menu_adapter.adaptFor(rcv_chapter_menu);
+        lesson_menu_adapter = new Lesson_Menu_Adapter(this);
+        lesson_menu_adapter.adaptFor(rcv_lesson_menu);
+
+        if (AppThemeManager.isOnNightMode) {
+            bg_night_mode.setVisibility(View.VISIBLE);
+        } else {
+            bg_night_mode.setVisibility(View.INVISIBLE);
+        } }
+
+    public void addEvent() {
+
+        btn_turn_on_chapter_menu.setOnClickListener(v -> {
+            rcv_chapter_menu.startAnimation(chapter_appear);
+            rcv_lesson_menu.startAnimation(lesson_disappear);
+            txt_title.setText("Chương");
         });
 
 
+        btn_back.setOnClickListener(v -> finish());
+
+        chapter_menu_adapter.setOnItemClickListener(item -> {
+            rcv_chapter_menu.startAnimation(chapter_disappear);
+            rcv_lesson_menu.startAnimation(lesson_appear);
+            lesson_menu_adapter.setData(item.getLessons());
+            txt_title.setText(item.getName());
+        });
         //                |
         //                |
         //                |     Load data from chapter_menu_adapter to lesson_menu_adapter
         //              \ | /
         //               \|/
         //                v
-
-
-        lesson_menu_adapter.setOnItemClickListener(new RCV_Menu_Adapter.OnItemClickListener<RO_Lesson>() {
-            @Override
-            public void onItemClickListener(RO_Lesson item) {
-                Log.e("CONTENT", item.getContent());
-                Intent intent = new Intent(LessonMenuActivity.this, LessonActivity.class);
-                intent.putExtra(LESSON_CONTENT, item.getContent());
-                startActivity(intent);
-            }
+        lesson_menu_adapter.setOnItemClickListener(item -> {
+            Intent intent = new Intent(LessonMenuActivity.this, LessonActivity.class);
+            intent.putExtra(LESSON_NAME, item);
+            startActivity(intent);
+            activityPresenter.bringToTop(item);
         });
 
-        btn_back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
-            }
-        });
-    }
-
-
-    private void addControl() {
-        chapter_menu_adapter = new Chapter_Menu_Adapter(this);
-        chapter_menu_adapter.adaptFor(rcv_chapter_menu);
-        loadData();
-        lesson_menu_adapter = new Lesson_Menu_Adapter(this);
-        lesson_menu_adapter.adaptFor(rcv_lesson_menu);
 
     }
 
-    private void loadAnim () {
-        suft_right_fade_out = AnimationUtils.loadAnimation(this, R.anim.suft_right_fade_out);
-        fade_in = AnimationUtils.loadAnimation(this, R.anim.fade_in);
+    public void setTheme () {
+        if (AppThemeManager.isCustomingTheme) {
+            if (AppThemeManager.isUsingColorBackground)
+                base_view.setBackgroundColor(AppThemeManager.getBackgroundColor());
+            else
+                base_view.setBackground(AppThemeManager.getBackgroundDrawable());
+        }
+    }
 
-        suft_right_fade_out.setAnimationListener(new Animation.AnimationListener() {
-            @Override
+    public void loadAnim () {
+
+        chapter_appear = AnimationUtils.loadAnimation(this, R.anim.fade_in);
+
+        chapter_disappear= AnimationUtils.loadAnimation(this, R.anim.suft_right_fade_out);
+
+        lesson_appear = AnimationUtils.loadAnimation(this, R.anim.fade_in);
+
+        lesson_disappear = AnimationUtils.loadAnimation(this, R.anim.suft_right_fade_out);
+
+        chapter_appear.setAnimationListener(new Animation.AnimationListener() {
             public void onAnimationStart(Animation animation) {
-
+                rcv_chapter_menu.setVisibility(View.VISIBLE);
             }
 
-            @Override
+            public void onAnimationEnd(Animation animation) {
+            }
+            public void onAnimationRepeat(Animation animation) {
+            }
+        });
+
+        chapter_disappear.setAnimationListener(new Animation.AnimationListener() {
             public void onAnimationEnd(Animation animation) {
                 rcv_chapter_menu.setVisibility(View.GONE);
-                Toast.makeText(LessonMenuActivity.this, "hehe" + rcv_chapter_menu.getVisibility(), Toast.LENGTH_SHORT).show();
             }
 
-            @Override
+            public void onAnimationStart(Animation animation) { }
+            public void onAnimationRepeat(Animation animation) { }
+        });
+
+        lesson_disappear.setAnimationListener(new Animation.AnimationListener() {
+
+            public void onAnimationEnd(Animation animation) {
+                rcv_lesson_menu.setVisibility(View.GONE);
+            }
+
+            public void onAnimationStart(Animation animation) {
+            }
             public void onAnimationRepeat(Animation animation) {
 
             }
         });
-    }
 
-    private void loadData () {
-        RealmResults<RO_Chapter> chapter_list = activityPresenter.getAll_Chapters_FromDB();
-        chapter_menu_adapter.setData(chapter_list);
+        lesson_appear.setAnimationListener(new Animation.AnimationListener() {
+            public void onAnimationStart(Animation animation) {
+                rcv_lesson_menu.setVisibility(View.VISIBLE);
+            }
+
+            public void onAnimationEnd(Animation animation) {
+            }
+            public void onAnimationRepeat(Animation animation) {
+            }
+        });
     }
 
 }

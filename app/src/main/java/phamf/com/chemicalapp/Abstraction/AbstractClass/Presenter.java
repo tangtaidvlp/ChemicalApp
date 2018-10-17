@@ -1,4 +1,4 @@
-package phamf.com.chemicalapp.Abstraction;
+package phamf.com.chemicalapp.Abstraction.AbstractClass;
 
 import android.app.Activity;
 import android.content.Context;
@@ -17,7 +17,4 @@ public abstract class Presenter <E extends Activity>{
         context = view.getBaseContext();
 
     }
-
-    public abstract void loadData ();
-
 }
