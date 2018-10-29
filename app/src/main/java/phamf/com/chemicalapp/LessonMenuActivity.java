@@ -53,9 +53,10 @@ public class LessonMenuActivity extends FullScreenActivity implements ILessonMen
     @BindView(R.id.parent_lesson_menu_activity) ConstraintLayout base_view;
 
 
-    Animation chapter_disappear, lesson_disappear;
+    Animation turnOnChapterButton_disappear, chapter_disappear, lesson_disappear;
 
-    Animation chapter_appear, lesson_appear;
+    Animation turnOnChapterButton_appear, chapter_appear, lesson_appear;
+
 
 
     LessonMenuActivityPresenter activityPresenter;
@@ -115,6 +116,7 @@ public class LessonMenuActivity extends FullScreenActivity implements ILessonMen
 
         btn_turn_on_chapter_menu.setOnClickListener(v -> {
             rcv_chapter_menu.startAnimation(chapter_appear);
+            btn_turn_on_chapter_menu.startAnimation(turnOnChapterButton_disappear);
             rcv_lesson_menu.startAnimation(lesson_disappear);
             txt_title.setText("Chương");
         });
@@ -125,6 +127,7 @@ public class LessonMenuActivity extends FullScreenActivity implements ILessonMen
         chapter_menu_adapter.setOnItemClickListener(item -> {
             rcv_chapter_menu.startAnimation(chapter_disappear);
             rcv_lesson_menu.startAnimation(lesson_appear);
+            btn_turn_on_chapter_menu.startAnimation(turnOnChapterButton_appear);
             lesson_menu_adapter.setData(item.getLessons());
             txt_title.setText(item.getName());
         });
@@ -158,6 +161,10 @@ public class LessonMenuActivity extends FullScreenActivity implements ILessonMen
         chapter_appear = AnimationUtils.loadAnimation(this, R.anim.fade_in);
 
         chapter_disappear= AnimationUtils.loadAnimation(this, R.anim.suft_right_fade_out);
+
+        turnOnChapterButton_appear = AnimationUtils.loadAnimation(this, R.anim.fade_in);
+
+        turnOnChapterButton_disappear= AnimationUtils.loadAnimation(this, R.anim.suft_right_fade_out);
 
         lesson_appear = AnimationUtils.loadAnimation(this, R.anim.fade_in);
 
@@ -206,6 +213,28 @@ public class LessonMenuActivity extends FullScreenActivity implements ILessonMen
             public void onAnimationRepeat(Animation animation) {
             }
         });
+
+        turnOnChapterButton_appear.setAnimationListener(new Animation.AnimationListener() {
+            public void onAnimationStart(Animation animation) {
+                btn_turn_on_chapter_menu.setVisibility(View.VISIBLE);
+            }
+
+            public void onAnimationEnd(Animation animation) {
+            }
+            public void onAnimationRepeat(Animation animation) {
+            }
+        });
+
+        turnOnChapterButton_disappear.setAnimationListener(new Animation.AnimationListener() {
+            public void onAnimationEnd(Animation animation) {
+                btn_turn_on_chapter_menu.setVisibility(View.GONE);
+            }
+
+            public void onAnimationStart(Animation animation) { }
+            public void onAnimationRepeat(Animation animation) { }
+        });
+
+
     }
 
 }

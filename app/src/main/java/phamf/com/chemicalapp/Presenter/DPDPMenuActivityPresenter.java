@@ -26,4 +26,8 @@ public class DPDPMenuActivityPresenter extends Presenter<DPDPMenuActivity> imple
         view.rcv_dpdp_adapter.setData(offline_DB_manager.readAllDataOf(RO_DPDP.class));
     }
 
+//    interface OnDataLoadSuccess {
+//        void onDataLoadSuccess()
+//    }
+
 }

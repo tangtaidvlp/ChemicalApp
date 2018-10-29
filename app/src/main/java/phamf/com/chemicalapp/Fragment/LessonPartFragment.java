@@ -19,6 +19,8 @@ public class LessonPartFragment extends Fragment {
 
     @BindView(R.id.board) public LinearLayout content_view;
 
+    private static final String CONTENT = "Content";
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -34,7 +36,7 @@ public class LessonPartFragment extends Fragment {
 
         Bundle bundle = getArguments();
         if (bundle != null) {
-            String content = bundle.getString("Content", "");
+            String content = bundle.getString(CONTENT, "");
             LessonViewCreator.ViewCreator viewCreator = new LessonViewCreator.ViewCreator(getContext(), content_view);
             viewCreator.addView(content);
         }
@@ -43,7 +45,7 @@ public class LessonPartFragment extends Fragment {
     public static LessonPartFragment newInstance(String content) {
         LessonPartFragment fragment = new LessonPartFragment();
         Bundle args = new Bundle();
-        args.putString("Content", content);
+        args.putString(CONTENT, content);
         fragment.setArguments(args);
         return fragment;
     }

@@ -135,7 +135,7 @@
             android:layout_alignParentTop="true"
             android:layout_marginEnd="17dp"
             android:layout_marginTop="73dp"
-            android:background="@drawable/background_index_lesson" />
+            android:background="@drawable/top_turn_off_search_mode" />
 
 
     </RelativeLayout>
@@ -152,13 +152,14 @@
 
     <Button
         android:id="@+id/btn_bottom_bangtuanhoan_search"
-        android:layout_width="30dp"
-        android:layout_height="30dp"
-        android:layout_marginRight="20dp"
-        android:layout_alignParentBottom="true"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
         android:layout_alignParentEnd="true"
-        android:layout_marginBottom="124dp"
-        android:background="@drawable/background_index_lesson"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="16dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginBottom="114dp"
+        android:background="@drawable/search_icon"
         android:gravity="right|bottom" />
 
 </RelativeLayout>

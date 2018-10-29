@@ -66,7 +66,7 @@
         app:layout_constraintVertical_bias="0.0" />
 
 
-    <RelativeLayout
+    <android.support.constraint.ConstraintLayout
         android:id="@+id/bg_hide_content_to_show_indicator"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -75,48 +75,44 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:alpha="0.95"
-        android:background="#ffffff"
         android:clickable="false"
         android:longClickable="false"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" >
+        app:layout_constraintTop_toTopOf="parent">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="10dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="parent"
-            android:layout_marginTop="52dp"
-            app:layout_constraintVertical_bias="0.02">
+            app:layout_constraintVertical_bias="1.0"
+            >
 
             <phamf.com.chemicalapp.CustomView.ViewPagerIndicator
                 android:id="@+id/vpg_indicator"
                 android:layout_width="match_parent"
-                android:layout_height="300dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginTop="8dp"
-                app:distance_between_two_dots="40dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                app:distance_between_two_dots="20dp"
                 app:dot_count="6"
-                app:hasTitle="true"
+                app:hasTitle="false"
                 app:normal_color="@android:color/holo_red_dark"
                 app:normal_radius="8dp"
                 app:normal_title_color="@android:color/holo_red_dark"
-                app:orientation="vertical"
+                app:orientation="horizontal"
                 app:selected_color="@android:color/holo_red_light"
                 app:selected_title_color="@android:color/holo_red_light"
                 app:seleted_radius="10dp"
-                app:wantShowText="true"
-                app:wrap_height="false"
-                app:wrap_width="false" />
+                app:wrap_height="true"
+                app:wrap_width="true" />
         </RelativeLayout>
 
 
-    </RelativeLayout>
+    </android.support.constraint.ConstraintLayout>
 
     <TextView
         android:id="@+id/bg_night_mode_lesson"

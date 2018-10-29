@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.support.design.widget.NavigationView;
@@ -27,6 +28,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Objects;
+import java.util.Random;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -92,7 +94,6 @@ public class MainActivity extends FullScreenActivity implements IMainActivity.Vi
 
     @BindView(R.id.rcv_search) RecyclerView rcv_search;
 
-    @BindView(R.id.test) ViewPagerIndicator indicator;
     private Search_CE_RCV_Adapter rcv_search_adapter;
 
 
@@ -184,6 +185,7 @@ public class MainActivity extends FullScreenActivity implements IMainActivity.Vi
 
         createNecessaryInfo();
 
+        /**Mark to ez to see**/
         loadAnim();
 
         addControl();
@@ -194,7 +196,7 @@ public class MainActivity extends FullScreenActivity implements IMainActivity.Vi
 
         activityPresenter.requirePermission(CODE_DRAW_OVER_OTHER_APP_PERMISSION);
 
-//        activityPresenter.checkUpdateStatus();
+        activityPresenter.checkUpdateStatus();
 
     }
 
@@ -248,7 +250,8 @@ public class MainActivity extends FullScreenActivity implements IMainActivity.Vi
              R.id.btn_background_color_6})
     public void onBackgroundColorButtonsClick (Button v) {
             int color = 0;
-            AppThemeManager.isCustomingTheme = true;
+            if (!AppThemeManager.isCustomingTheme) AppThemeManager.isCustomingTheme = true;
+            if (!AppThemeManager.isUsingColorBackground) AppThemeManager.isUsingColorBackground= true;
             switch (v.getId()) {
                 case R.id.btn_background_color_1 : {
                     color = 0;
@@ -420,6 +423,7 @@ public class MainActivity extends FullScreenActivity implements IMainActivity.Vi
         btn_update.setOnClickListener (v -> {
             activityPresenter.updateAll_CE_OFFDB();
             activityPresenter.updateAll_Chapter_OFFDB();
+            activityPresenter.updateAll_DPDP_OFFDB();
             startActivity(new Intent(MainActivity.this, MainActivity.class));
             finish();
         });
@@ -441,6 +445,7 @@ public class MainActivity extends FullScreenActivity implements IMainActivity.Vi
     public void loadAnim () {
         fade_in = AnimationUtils.loadAnimation(this, R.anim.fade_in);
         fade_out = AnimationUtils.loadAnimation(this, R.anim.fade_out);
+        fade_out.setFillAfter(false);
         fade_in.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
@@ -480,7 +485,7 @@ public class MainActivity extends FullScreenActivity implements IMainActivity.Vi
     }
 
     public void setTheme() {
-        if (AppThemeManager.isUsingAvailableThemes || AppThemeManager.isCustomingTheme) {
+        if ( AppThemeManager.isCustomingTheme | AppThemeManager.isUsingAvailableThemes) {
             txt_lesson.setTextColor(getColor(AppThemeManager.getTextColor()));
             txt_quick_search.setTextColor(getColor(AppThemeManager.getTextColor()));
             txt_bangtuanhoang.setTextColor(getColor(AppThemeManager.getTextColor()));

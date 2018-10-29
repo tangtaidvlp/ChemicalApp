@@ -110,8 +110,6 @@ public class ViewPagerIndicator extends View {
         super.onMeasure(widthMeasureSpec, heightMeasureSpec);
         int width = 0, height = 0;
 
-        Log.e("ON_MEASURE", "ON");
-
         if (!hasTitle) {
             if (orientation == HORIZONTAL) {
                 int expected_width = normal_radius * dot_count
@@ -174,8 +172,6 @@ public class ViewPagerIndicator extends View {
 
         if (orientation == HORIZONTAL) createHorizontalDot_List();
         else if (orientation == VERTICAL) createVerticalDot_List();
-
-        Log.e("ON_LAYOUT", "ON");
     }
 
     @Override
@@ -186,7 +182,6 @@ public class ViewPagerIndicator extends View {
         }
 
         if (wantShowText) {
-            Log.e("Draw text", "Yes");
             for (Dot dot : dot_list) {
                 dot.drawTitle(canvas);
             }
@@ -363,6 +358,75 @@ public class ViewPagerIndicator extends View {
             }
         }
         return highest_length;
+    }
+
+
+    public static int getVERTICAL() {
+        return VERTICAL;
+    }
+
+    public static int getHORIZONTAL() {
+        return HORIZONTAL;
+    }
+
+    public int getDot_count() {
+        return dot_count;
+    }
+
+    public int getSelected_radius() {
+        return selected_radius;
+    }
+
+    public int getDistance_between_2_dots() {
+        return distance_between_2_dots;
+    }
+
+    public int getNormal_radius() {
+        return normal_radius;
+    }
+
+    public int getNormal_dot_color() {
+        return normal_dot_color;
+    }
+
+    public int getSelected_dot_color() {
+        return selected_dot_color;
+    }
+
+    public int getNormal_title_color() {
+        return normal_title_color;
+    }
+
+    public int getSelected_title_color() {
+        return selected_title_color;
+    }
+
+    public boolean isWrapWidth() {
+        return isWrapWidth;
+    }
+
+    public boolean isWrapHeight() {
+        return isWrapHeight;
+    }
+
+    public int getOrientation() {
+        return orientation;
+    }
+
+    public int getPreDotPos() {
+        return preDotPos;
+    }
+
+    public int getSelectedDotPos() {
+        return selectedDotPos;
+    }
+
+    public boolean isWantShowText() {
+        return wantShowText;
+    }
+
+    public boolean isHasTitle() {
+        return hasTitle;
     }
 }
 

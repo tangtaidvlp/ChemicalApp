@@ -1,6 +1,7 @@
 package phamf.com.chemicalapp.Adapter;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -52,12 +53,12 @@ public class BangTuanHoang_GrV_Adapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
+        // The empty chemical element present for a empty position
         if (list.get(position).getName() == "") {
             LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             convertView = layoutInflater.inflate(R.layout.child_empty_chemical_element, parent, false);
             return convertView;
-        };
-
+        }
 
         ViewHolder viewHolder;
 
@@ -83,11 +84,9 @@ public class BangTuanHoang_GrV_Adapter extends BaseAdapter {
         viewHolder.txt_proton.setText(String.valueOf(element.getProton_count()));
         viewHolder.txt_symbol.setText(element.getSymbol());
         viewHolder.txt_name.setText(element.getName());
-        viewHolder.txt_mass.setText(String.valueOf(element.getMass()));
-
-
+        String mass = (element.getMass() + "").endsWith(".0") ? ((int) element.getMass()) + "" : element.getMass() + "";
+        viewHolder.txt_mass.setText(mass);
         convertView.setBackgroundColor(element.getBackground_color());
-
 
         return convertView;
     }

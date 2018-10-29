@@ -118,6 +118,7 @@ public class ChemicalElementActivity extends FullScreenActivity implements IChem
 
         bg_escape_search_mode.setOnClickListener(v -> {
             search_view_parent.startAnimation(fade_out);
+            edt_search.setText("");
         });
     }
 

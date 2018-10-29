@@ -301,7 +301,6 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/bg_edt_search"
-        android:visibility="gone"
         app:layout_constraintVertical_bias="0.0">
 
         <android.support.v7.widget.RecyclerView
@@ -321,7 +320,7 @@
             android:layout_alignParentTop="true"
             android:layout_marginEnd="13dp"
             android:layout_marginTop="57dp"
-            android:background="@drawable/background_index_lesson" />
+            android:background="@drawable/top_turn_off_search_mode" />
 
     </RelativeLayout>
 
@@ -350,7 +349,7 @@
         android:layout_height="30dp"
         android:layout_marginRight="10dp"
         android:layout_marginBottom="10dp"
-        android:background="@drawable/background_index_lesson"
+        android:background="@drawable/red_search_icon"
         app:layout_constraintBottom_toTopOf="@+id/btn_chem_element_back"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"

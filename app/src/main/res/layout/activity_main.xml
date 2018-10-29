@@ -227,11 +227,13 @@
             app:layout_constraintTop_toBottomOf="@+id/linearLayout4"
             app:layout_constraintVertical_bias="0.017">
 
+
             <ImageButton
                 android:id="@+id/btn_bangtuanhoan"
                 android:layout_width="50dp"
                 android:layout_height="60dp"
                 android:background="@drawable/bang_tuan_hoang_icon" />
+
 
 
             <TextView
@@ -341,18 +343,18 @@
             android:id="@+id/search_chem_equation_view_parent"
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:visibility="gone"
             app:layout_constraintBottom_toTopOf="@+id/bottom_nav_background"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/edt_search"
-            android:visibility="gone"
             app:layout_constraintVertical_bias="1.0">
 
             <TextView
                 android:id="@+id/bg_escape_search_mode"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
+                android:layout_height="match_parent"
                 android:layout_marginBottom="2dp"
                 android:alpha="0.5"
                 android:background="@drawable/black_background"
@@ -362,6 +364,14 @@
                 android:id="@+id/rcv_search"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/bg_escape_search_mode"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginStart="0dp"
+                android:layout_marginTop="0dp"
+                android:layout_marginEnd="0dp"
+                android:layout_marginBottom="373dp"
                 android:background="@drawable/background_search_view"
                 android:foregroundGravity="top">
 
@@ -369,36 +379,17 @@
 
             <Button
                 android:id="@+id/btn_top_turn_off_search"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_alignParentEnd="true"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
                 android:layout_alignParentTop="true"
-                android:layout_marginEnd="11dp"
-                android:layout_marginTop="15dp"
-                android:background="@drawable/background_index_lesson" />
+                android:layout_alignParentEnd="true"
+                android:layout_marginTop="105dp"
+                android:layout_marginEnd="12dp"
+                android:background="@drawable/top_turn_off_search_mode" />
+
+
 
         </RelativeLayout>
-
-        <phamf.com.chemicalapp.CustomView.ViewPagerIndicator
-            android:id="@+id/test"
-            android:layout_width="250dp"
-            android:layout_height="210dp"
-            android:layout_marginStart="80dp"
-            android:layout_marginTop="8dp"
-            app:distance_between_two_dots="30dp"
-            app:dot_count="2"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.581"
-            app:normal_color="@android:color/darker_gray"
-            app:normal_radius="5dp"
-            app:selected_color="@android:color/holo_red_light"
-            app:seleted_radius="10dp"
-            app:wrap_height="true"
-            app:wrap_width="true" />
-
 
 
     </android.support.constraint.ConstraintLayout>

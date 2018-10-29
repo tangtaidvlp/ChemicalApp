@@ -27,7 +27,7 @@ import phamf.com.chemicalapp.RO_Model.RO_Lesson;
  * @see RecentLessonActivityPresenter
  */
 
-public class RecentLessonsActivity extends AppCompatActivity implements IRecentLessonActivity.View, RecentLessonActivityPresenter.DataLoadListener {
+public class RecentLessonsActivity extends FullScreenActivity implements IRecentLessonActivity.View, RecentLessonActivityPresenter.DataLoadListener {
 
 
     @BindView(R.id.rcv_recent_lesson_menu) RecyclerView rcv_recent_lesson_menu;
@@ -61,6 +61,7 @@ public class RecentLessonsActivity extends AppCompatActivity implements IRecentL
         activityPresenter.setOnDataLoadListener(this);
 
         activityPresenter.loadData();
+        
     }
 
     @Override

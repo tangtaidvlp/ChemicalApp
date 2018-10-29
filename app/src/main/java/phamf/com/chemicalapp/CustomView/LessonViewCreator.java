@@ -5,9 +5,12 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import phamf.com.chemicalapp.Adapter.ViewPager_Lesson_Adapter;
+
+import android.util.Log;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import phamf.com.chemicalapp.R;
 
@@ -31,31 +34,21 @@ public class LessonViewCreator {
         this.viewPager_adapter = viewPager_adapter;
     }
 
-    public void separatePart_And_BindDataToViewPG (String content) {
-
-        String [] part_list = content.split(PART_DEVIDER);
-
-        for (String part : part_list) {
-            viewPager_adapter.addData(part);
-        }
-
-        viewPager_adapter.notifyDataSetChanged();
-    }
-
-
     public static class ViewCreator {
 
         public static final String COMPONENT_DEVIDER = "<co_divi>";
 
-        public static final String BIG_TITLE = "<<B_TITLE>>";
+        public static final String BIG_TITLE = "<<b_title>>";
 
-        public static final String SMALL_TITLE = "<<S_TITLE>>";
+        public static final String SMALL_TITLE = "<<s_title>>";
 
-        public static final String SMALLER_TITLE = "<<s_TITLE>>";
+        public static final String SMALLER_TITLE = "<<smlr_tt>>";
 
-        public static final String IMAGE = "<<PICTURE>>";
+        public static final String TAG_DIVIDER = "<>";
 
-        public static final String CONTENT = "<<CONTENT>>";
+        public static final String IMAGE = "<<picture" + TAG_DIVIDER;
+
+        public static final String CONTENT = "<<content>>";
 
         // Text data usually has form as follow : <<B_TITLE>><<BoldTxt>>Hello World
         // 11 is length of <<B_TITLE>> (Type) and the START position of <<BoldTxt>> (Text style) too
@@ -75,6 +68,7 @@ public class LessonViewCreator {
 
         private static int content_mLeft, content_mTop, content_mRight, content_mBottom, content_width = WRAP_CONTENT, content_height = WRAP_CONTENT;
 
+        private static int content_text_size, big_title_text_size, small_title_text_size, smaller_title_text_size;
 
         // Constructor
         public ViewCreator (Context context, LinearLayout parent) {
@@ -106,11 +100,26 @@ public class LessonViewCreator {
             content_mBottom = mBottom;
         }
 
+        public static void setContent_text_size(int content_text_size) {
+            ViewCreator.content_text_size = content_text_size;
+        }
+
+        public static void setBig_title_text_size(int big_title_text_size) {
+            ViewCreator.big_title_text_size = big_title_text_size;
+        }
+
+        public static void setSmall_title_text_size(int small_title_text_size) {
+            ViewCreator.small_title_text_size = small_title_text_size;
+        }
+
+        public static void setSmaller_title_text_size(int smaller_title_text_size) {
+            ViewCreator.smaller_title_text_size = smaller_title_text_size;
+        }
 
         // Functions
         public void addContent (String content, String style) {
             TextView textView = new TextView(context);
-            textView.setTextSize(DpToPixel(10));
+            textView.setTextSize(DpToPixel(content_text_size));
             textView.setTextColor(Color.parseColor("#222222"));
             textView.setText(content);
             textView.setTypeface(textView.getTypeface(), getTextStyle(style));
@@ -125,7 +134,7 @@ public class LessonViewCreator {
             TextView textView = new TextView(context);
             textView.setText(title);
             textView.setTypeface(textView.getTypeface(), getTextStyle(style));
-            textView.setTextSize(DpToPixel(12));
+            textView.setTextSize(DpToPixel(big_title_text_size));
             textView.setTextColor(Color.parseColor("#BA1308"));
 
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(bt_width, bt_height);
@@ -137,7 +146,7 @@ public class LessonViewCreator {
         public void addSmallTitle (String title, String style) {
             TextView textView = new TextView(context);
             textView.setText(title);
-            textView.setTextSize(DpToPixel(11));
+            textView.setTextSize(DpToPixel(small_title_text_size));
             textView.setTextColor(Color.parseColor("#BA1308"));
             textView.setTypeface(textView.getTypeface(), getTextStyle(style));
 
@@ -150,7 +159,7 @@ public class LessonViewCreator {
         public void addSmallerTitle (String title, String style) {
             TextView textView = new TextView(context);
             textView.setText(title);
-            textView.setTextSize(DpToPixel(11));
+            textView.setTextSize(DpToPixel(smaller_title_text_size));
             textView.setTextColor(Color.parseColor("#BA1308"));
             textView.setTypeface(textView.getTypeface(), getTextStyle(style));
 
@@ -162,6 +171,7 @@ public class LessonViewCreator {
 
         public void addImageContent (int imageId, int width, int height,
                                      int mLeft, int mTop, int mRight, int mBottom) {
+
             Drawable background = context.getDrawable(imageId);
             ImageView imageView = new ImageView(context);
             imageView.setBackground(background);
@@ -171,29 +181,49 @@ public class LessonViewCreator {
             parent.addView(imageView);
         }
 
+
+        private static final int IMAGE_ID = 1;
+        private static final int IMAGE_WIDTH = 2;
+        private static final int IMAGE_HEIGHT = 3;
+
         public void addView (String content) {
             String [] component_list = content.split(COMPONENT_DEVIDER);
             for (String component : component_list) {
                 if (component != "") {
-                    if (component.startsWith(BIG_TITLE)) {
-                        // Get Type of Text
-                        String text_style = component.substring(0, BEGIN_TEXT_STYLE_POSITION);
-                        // Get Text style
-                        String text_content = component.substring(END_TEXT_STYLE_POSITION);
-                        addBigTitle(text_content, text_style);
+
+                    if (component.startsWith(IMAGE)) {
+                        try {
+                            String [] image_info = component.split(TAG_DIVIDER);
+                            //The position of 3 infomation below is arrange in info array follow the order"
+                            // IMAGE_ID : 1 ; IMAGE_WIDTH : 2 ; IMAGE_HEIGHT : 3
+
+                            int id = Integer.valueOf(image_info[IMAGE_ID]);
+                            int width = Integer.valueOf(image_info[IMAGE_WIDTH]);
+                            int height = Integer.valueOf(image_info[IMAGE_HEIGHT]);
+                            Log.e("Id", id +"");
+                            Log.e("height", height +"");
+                            Log.e("width", width +"con cac");
+                            addImageContent(id, DpToPixel(width), DpToPixel(height),
+                                    DpToPixel(10),
+                                    DpToPixel(10),
+                                    DpToPixel(10),
+                                    DpToPixel(10));
+                        } catch (NumberFormatException ex) {
+                            Log.e("Error when add image", "Đã xảy ra lỗi khi xử lí ảnh");
+                            Log.e("Error when add image", "Error happened when process image");
+                        }
 
                     } else if (component.startsWith(SMALL_TITLE)) {
                         String text_content = component.substring(END_TEXT_STYLE_POSITION);
                         String text_style = component.substring(0, BEGIN_TEXT_STYLE_POSITION);
                         addSmallTitle(text_content, text_style);
 
-                    } else if (component.startsWith(IMAGE)) {
-
-                        addImageContent(R.drawable.back_icon, DpToPixel(300), DpToPixel(300),
-                                DpToPixel(10),
-                                DpToPixel(10),
-                                DpToPixel(10),
-                                DpToPixel(10));
+                    } else if (component.startsWith(BIG_TITLE)) {
+                        // Get Type of Text
+                        String text_style = component.substring(0, BEGIN_TEXT_STYLE_POSITION);
+                        // Get Text style
+                        String text_content = component.substring(END_TEXT_STYLE_POSITION);
+                        addBigTitle(text_content, text_style);
 
                     } else if (component.startsWith(CONTENT)) {
                         String text_content = component.substring(END_TEXT_STYLE_POSITION);

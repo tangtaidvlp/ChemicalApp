@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
+import android.text.Html;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -56,6 +57,60 @@ public class Search_CE_RCV_Adapter extends RecyclerView.Adapter<Search_CE_RCV_Ad
         list = new ArrayList<>();
         defaultList = new ArrayList<>();
         filter = new Searcher();
+
+    }
+
+
+    private String process (int startPos, String s) {
+        StringBuilder s_builder = new StringBuilder();
+        boolean continue_run = true;
+        for (int i = startPos; i < s.length(); i++) {
+            if (continue_run)
+            if (isNumeric(s.charAt(i)) && (i != 0) && (!isNumeric(s.substring(0, i + 1)))) {
+                if (i < s.length() - 1) {
+                    for (int j = i + 1; i < s.length(); j++) {
+                        if (!isNumeric(s.charAt(j))) {
+                            s_builder.insert(j, "</sub>");
+                            s_builder.insert(i, "<sub>");
+                            s = process(j + 11, s_builder.toString());
+                            continue_run = false;
+                        } else if ((j == s.length() - 1) && (isNumeric(s.charAt(j)))) {
+                            s_builder.insert(i, "</sub>");
+                            s_builder.append("<sub>");
+                            s = s_builder.toString();
+                            continue_run = false;
+                        }
+                    }
+                } else {
+                    s_builder.insert(i, "</sub>");
+                    s_builder.append("<sub>");
+                    s = s_builder.toString();
+                    continue_run = false;
+                }
+            }
+        }
+        return s;
+    }
+
+    private boolean isNumeric(String s) {
+
+        try {
+            Integer.valueOf(s);
+            return true;
+        } catch (NumberFormatException ex) {
+            return false;
+        }
+
+    }
+
+    private boolean isNumeric(char s) {
+
+        try {
+            Integer.valueOf(s);
+            return true;
+        } catch (NumberFormatException ex) {
+            return false;
+        }
 
     }
 
@@ -159,8 +214,8 @@ public class Search_CE_RCV_Adapter extends RecyclerView.Adapter<Search_CE_RCV_Ad
     @Override
     public void onBindViewHolder(@NonNull Search_CE_RCV_Adapter.DataViewHolder holder, int position) {
         RO_ChemicalEquation ro_ce = list.get(position);
-        String equation = ro_ce.getAddingChemicals() + " -> " + ro_ce.getProduct();
-        holder.txt_view.setText(equation);
+        CharSequence edited_equation = Html.fromHtml(ro_ce.getAddingChemicals() + " ⇌ " + ro_ce.getProduct());
+        holder.txt_view.setText(edited_equation);
         holder.txt_view.setTypeface(FontManager.arial);
     }
 
@@ -230,6 +285,4 @@ public class Search_CE_RCV_Adapter extends RecyclerView.Adapter<Search_CE_RCV_Ad
     }
 
 }
-
-
 

@@ -9,15 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-
         >
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Alo ha ba ca shi ba ta"
-            android:textSize="40sp"
-            android:gravity="center"
-            />
     </LinearLayout>
 
 
