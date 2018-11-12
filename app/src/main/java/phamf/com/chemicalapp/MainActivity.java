@@ -238,7 +238,6 @@ public class MainActivity extends FullScreenActivity implements IMainActivity.Vi
             bg_night_mode.setVisibility(View.VISIBLE);
         }
 
-        btn_set_as_defaut.setOnClickListener( v -> {});
     }
 
 
@@ -369,6 +368,7 @@ public class MainActivity extends FullScreenActivity implements IMainActivity.Vi
             edt_search.setText("");
             rcv_search_adapter.isSearching(false);
             hideSoftKeyboard(MainActivity.this);
+            makeFullScreen();
             isOnSearchMode = false;
         });
 
@@ -378,15 +378,17 @@ public class MainActivity extends FullScreenActivity implements IMainActivity.Vi
 
         btn_bangtuanhoang.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, BangTuanHoangActivity.class)));
 
+        btn_quick_search.setOnClickListener(v -> {
+            floatingSearchViewManager.init();
+            finish();
+        });
+
 
         btn_turnOff_search.setOnClickListener(v -> {
             search_view_parent.startAnimation(fade_out);
             edt_search.setText("");
             rcv_search_adapter.isSearching(false);
         });
-
-
-        btn_quick_search.setOnClickListener(v -> floatingSearchViewManager.init());
 
 
         btn_lesson.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, LessonMenuActivity.class)));
@@ -413,7 +415,6 @@ public class MainActivity extends FullScreenActivity implements IMainActivity.Vi
             Intent intent = new Intent(MainActivity.this, ChemicalEquationActivity.class);
             intent.putExtra(ChemicalEquationActivity.CHEMICAL_EQUATION, equation);
             startActivity(intent);
-
         });
 
 

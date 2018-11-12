@@ -8,6 +8,18 @@
     android:background="@drawable/background_lesson_menu"
     tools:context=".LessonMenuActivity">
 
+    <ProgressBar
+        android:id="@+id/circle_pb_lesson_menu"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="115dp"
+        android:layout_height="144dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <TextView
         android:id="@+id/txt_lesson_menu_title"
         android:layout_width="0dp"

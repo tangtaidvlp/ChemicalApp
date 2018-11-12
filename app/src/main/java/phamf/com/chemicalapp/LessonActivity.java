@@ -173,12 +173,12 @@ public class LessonActivity extends FullScreenActivity implements ILessonActivit
     public void setUpViewCreator () {
         lessonViewCreator = new LessonViewCreator(vpg_lesson_adapter);
         LessonViewCreator.ViewCreator.setMarginBigTitle(DpToPixel(10),DpToPixel(7),DpToPixel(10),0);
-        LessonViewCreator.ViewCreator.setMarginSmallTitle(DpToPixel(17),DpToPixel(4),DpToPixel(10),0);
-        LessonViewCreator.ViewCreator.setMarginContent(DpToPixel(40),DpToPixel(4),DpToPixel(10),0);
-        LessonViewCreator.ViewCreator.setBig_title_text_size(8);
-        LessonViewCreator.ViewCreator.setSmall_title_text_size(6);
-        LessonViewCreator.ViewCreator.setSmaller_title_text_size(5);
-        LessonViewCreator.ViewCreator.setContent_text_size(5);
+        LessonViewCreator.ViewCreator.setMarginSmallTitle(DpToPixel(13),DpToPixel(4),DpToPixel(10),0);
+        LessonViewCreator.ViewCreator.setMarginContent(DpToPixel(20),DpToPixel(4),DpToPixel(10),0);
+        LessonViewCreator.ViewCreator.setBig_title_text_size(DpToPixel(4));
+        LessonViewCreator.ViewCreator.setSmall_title_text_size(DpToPixel(3));
+        LessonViewCreator.ViewCreator.setSmaller_title_text_size(DpToPixel(3));
+        LessonViewCreator.ViewCreator.setContent_text_size(DpToPixel(3));
     }
 
     public void loadAndSetEventForAnimation () {

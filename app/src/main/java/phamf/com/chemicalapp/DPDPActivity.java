@@ -164,17 +164,13 @@ public class DPDPActivity extends FullScreenActivity implements IDPDPActivity.Vi
 
     public void setUpViewCreator () {
         viewCreator = new LessonViewCreator.ViewCreator(this, board);
-//        viewCreator.setMarginContent(10, 10, 10, 10);
-//        viewCreator.setMarginSmallTitle(10, 10, 10, 10);
-//        viewCreator.setMarginBigTitle(10, 10, 10, 10);
         LessonViewCreator.ViewCreator.setMarginBigTitle(DpToPixel(10),DpToPixel(7),DpToPixel(10),0);
-        LessonViewCreator.ViewCreator.setMarginSmallTitle(DpToPixel(17),DpToPixel(4),DpToPixel(10),0);
-        LessonViewCreator.ViewCreator.setMarginContent(DpToPixel(40),DpToPixel(4),DpToPixel(10),0);
-        LessonViewCreator.ViewCreator.setBig_title_text_size(8);
-        LessonViewCreator.ViewCreator.setSmall_title_text_size(6);
-        LessonViewCreator.ViewCreator.setSmaller_title_text_size(5);
-        LessonViewCreator.ViewCreator.setContent_text_size(5);
-
+        LessonViewCreator.ViewCreator.setMarginSmallTitle(DpToPixel(13),DpToPixel(4),DpToPixel(10),0);
+        LessonViewCreator.ViewCreator.setMarginContent(DpToPixel(20),DpToPixel(4),DpToPixel(10),0);
+        LessonViewCreator.ViewCreator.setBig_title_text_size(DpToPixel(4));
+        LessonViewCreator.ViewCreator.setSmall_title_text_size(DpToPixel(3));
+        LessonViewCreator.ViewCreator.setSmaller_title_text_size(DpToPixel(3));
+        LessonViewCreator.ViewCreator.setContent_text_size(DpToPixel(3));
     }
 
     public void setTheme () {

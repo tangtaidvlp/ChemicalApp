@@ -1,6 +1,8 @@
 package phamf.com.chemicalapp.Service;
 
 import android.annotation.SuppressLint;
+import android.app.ActivityManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
 import android.graphics.PixelFormat;
@@ -13,29 +15,41 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.Window;
 import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+
 import phamf.com.chemicalapp.Adapter.Search_CE_RCV_Adapter;
+import phamf.com.chemicalapp.ChemicalEquationActivity;
+import phamf.com.chemicalapp.CustomView.VirtualKeyBoardSensor;
+import phamf.com.chemicalapp.MainActivity;
+import phamf.com.chemicalapp.Manager.FullScreenManager;
 import phamf.com.chemicalapp.R;
 import phamf.com.chemicalapp.RO_Model.RO_ChemicalEquation;
+
+import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
+import static android.view.WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE;
+import static android.view.WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
+import static android.view.WindowManager.LayoutParams.TYPE_PHONE;
 
 public class FloatingSearchIconService extends Service {
 
     private WindowManager mWindowManager;
-    private View fl_search_view;
+    private View parent;
     float deltaX = 0, deltaY = 0;
     float touchX, touchY;
-    private RecyclerView fl_rcv_search;
-    private EditText fl_edt_search;
     private ImageButton fl_ib_search;
-    private Search_CE_RCV_Adapter fl_adapter;
-
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
@@ -47,24 +61,19 @@ public class FloatingSearchIconService extends Service {
     public void onCreate() {
         super.onCreate();
 
-        Toast.makeText(this, "Create", Toast.LENGTH_SHORT).show();
-
-
-        fl_search_view = LayoutInflater.from(this).inflate(R.layout.floating_search_view, null);
-
+        parent = LayoutInflater.from(this).inflate(R.layout.floating_search_view, null, false);
         final WindowManager.LayoutParams params = new WindowManager.LayoutParams(
-                WindowManager.LayoutParams.WRAP_CONTENT,
-                WindowManager.LayoutParams.WRAP_CONTENT,
-                WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
-                WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
-                PixelFormat.TRANSLUCENT);
-
-        params.gravity = Gravity.TOP | Gravity.LEFT;
+                WRAP_CONTENT,
+                WRAP_CONTENT,
+                android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O ?
+                        TYPE_APPLICATION_OVERLAY : TYPE_PHONE,
+                        FLAG_NOT_FOCUSABLE
+                , PixelFormat.TRANSLUCENT);
         params.x = 50;
         params.y = 50;
 
         mWindowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
-        mWindowManager.addView(fl_search_view, params);
+        mWindowManager.addView(parent, params);
 
         addControl();
         addEvent();
@@ -83,24 +92,23 @@ public class FloatingSearchIconService extends Service {
 
                     break;
                 }
+
                 case MotionEvent.ACTION_UP: {
                     if ((Math.abs(event.getRawX() - touchX) < 10) && (Math.abs(event.getRawY() - touchY) < 10)) {
-                        if (fl_edt_search.getVisibility() == View.VISIBLE) {
-                            fl_edt_search.setVisibility(View.GONE);
-                            fl_rcv_search.setVisibility(View.GONE);
-                        } else if ((fl_edt_search.getVisibility() == View.INVISIBLE) | (fl_edt_search.getVisibility() == View.GONE)) {
-                            fl_edt_search.setVisibility(View.VISIBLE);
-                            fl_rcv_search.setVisibility(View.VISIBLE);
-                        }
+                        Intent startSearchIntent = new Intent(getApplicationContext(), MainActivity.class);
+                        startSearchIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        startActivity(startSearchIntent);
+                        stopSelf();
                     }
                     break;
                 }
+
                 case MotionEvent.ACTION_MOVE: {
                     float X = event.getRawX() - deltaX;
                     float Y = event.getRawY() - deltaY;
                     params.x = (int) X;
                     params.y = (int) Y;
-                    mWindowManager.updateViewLayout(fl_search_view, params);
+                    mWindowManager.updateViewLayout(parent, params);
                     return true;
                 }
             }
@@ -110,49 +118,21 @@ public class FloatingSearchIconService extends Service {
     }
 
     private void addControl () {
-        View parent = fl_search_view;
-        fl_rcv_search = parent.findViewById(R.id.fl_rcv_equ_search);
-        fl_adapter = new Search_CE_RCV_Adapter(this);
-        fl_adapter.adaptFor(fl_rcv_search);
-
-        fl_edt_search = parent.findViewById(R.id.fl_edt_search);
         fl_ib_search = parent.findViewById(R.id.fl_ib_search);
     }
 
     private void addEvent () {
-        fl_adapter.setOnItemClickListener((view, equation, position) -> Toast.makeText(FloatingSearchIconService.this, "" + position, Toast.LENGTH_SHORT).show());
 
-        fl_edt_search.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-                fl_adapter.getFilter().filter(s);
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        MediaPlayer player = MediaPlayer.create(this, R.raw.emmoilanguoiyeuanh);
-        player.start();
-        player.seekTo(80000);
         return START_STICKY;
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        mWindowManager.removeView(fl_search_view);
+        mWindowManager.removeView(parent);
     }
 }

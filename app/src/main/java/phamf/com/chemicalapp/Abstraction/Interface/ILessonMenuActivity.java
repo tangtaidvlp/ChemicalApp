@@ -29,8 +29,6 @@ public interface ILessonMenuActivity {
      */
     interface Presenter {
 
-        RealmResults<RO_Chapter> getAll_Chapters_FromDB ();
-
         void loadData();
 
         void pushCachingDataToDB ();
