@@ -3,6 +3,7 @@ package phamf.com.chemicalapp.Presenter;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 
+import io.realm.RealmResults;
 import phamf.com.chemicalapp.Abstraction.AbstractClass.Presenter;
 import phamf.com.chemicalapp.Abstraction.Interface.ILessonActivity;
 import phamf.com.chemicalapp.LessonActivity;
@@ -35,6 +36,7 @@ public class LessonActivityPresenter extends Presenter<LessonActivity> implement
                 onDataLoadListener.OnDataLoadSuccess(ro_lesson.getName(), ro_lesson.getContent());
             }
         }
+
     }
 
 

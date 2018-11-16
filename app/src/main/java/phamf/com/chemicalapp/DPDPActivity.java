@@ -54,7 +54,8 @@ public class DPDPActivity extends FullScreenActivity implements IDPDPActivity.Vi
 
     public LessonViewCreator.ViewCreator viewCreator;
 
-    private boolean isTurnOnQCI;
+    // check if s showing quick change dpdp board
+    private boolean isShowingQCB;
 
     Animation fade_out_then_in, left_to_right, right_to_left;
 
@@ -101,16 +102,13 @@ public class DPDPActivity extends FullScreenActivity implements IDPDPActivity.Vi
 
         left_to_right.setAnimationListener(new Animation.AnimationListener() {
             @Override
-            public void onAnimationStart(Animation animation) {
-
-            }
-
-            @Override
             public void onAnimationEnd(Animation animation) {
                 lv_quick_change_organic.setVisibility(View.GONE);
             }
 
-            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
             public void onAnimationRepeat(Animation animation) {
 
             }
@@ -122,11 +120,8 @@ public class DPDPActivity extends FullScreenActivity implements IDPDPActivity.Vi
                 lv_quick_change_organic.setVisibility(View.VISIBLE);
             }
 
-            @Override
             public void onAnimationEnd(Animation animation) {
             }
-
-            @Override
             public void onAnimationRepeat(Animation animation) {
 
             }
@@ -138,22 +133,22 @@ public class DPDPActivity extends FullScreenActivity implements IDPDPActivity.Vi
         qc_organic_adapter.setOnItemClickListener((item, view) -> {
 //            viewCreator.clearAll();
             board.startAnimation(fade_out_then_in);
-//            viewCreator.addView(presenter.convertContent(item));
+            viewCreator.addView(presenter.convertContent(item));
             lv_quick_change_organic.startAnimation(left_to_right);
-            isTurnOnQCI = false;
+            isShowingQCB= false;
         });
 
         board.setOnClickListener(v -> {
-            if (isTurnOnQCI) {
-                isTurnOnQCI = false;
+            if (isShowingQCB) {
+                isShowingQCB= false;
                 lv_quick_change_organic.startAnimation(left_to_right);
             }
         });
 
         btn_turn_on_quick_change.setOnClickListener(v -> {
-            if (!isTurnOnQCI){
+            if (!isShowingQCB){
                 lv_quick_change_organic.startAnimation(right_to_left);
-                isTurnOnQCI = true;
+                isShowingQCB= true;
             }
         });
 

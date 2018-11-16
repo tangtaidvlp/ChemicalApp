@@ -20,10 +20,13 @@ import phamf.com.chemicalapp.RO_Model.RO_Isomerism;
 import phamf.com.chemicalapp.RO_Model.RO_Lesson;
 import phamf.com.chemicalapp.RO_Model.RO_OrganicMolecule;
 
-//Realm Object Converter
+//Convert from object from firebase to realm model object
+/** @see phamf.com.chemicalapp.Database.OnlineDatabaseManager **/
 public class ROConverter {
 
 
+    // Collections
+    // Normal model List to Realm Model list
     public static ArrayList<RO_Lesson> toRO_Lessons (Collection<Lesson> lessons) {
         ArrayList<RO_Lesson> ro_lessons = new ArrayList<>();
 
@@ -41,15 +44,25 @@ public class ROConverter {
     public static ArrayList<RO_Chapter> toRO_Chapters (Collection<Chapter> chapters) {
         ArrayList<RO_Chapter> ro_chapters = new ArrayList<>();
 
-        for ( Chapter chapter : chapters) {
-            RO_Chapter ro_chapter = new RO_Chapter();
-            ro_chapter.setId(chapter.getid());
-            ro_chapter.setName(chapter.getName());
-            ro_chapters.add(ro_chapter);
+        for (Chapter chapter : chapters) {
+            RO_Chapter ro_chapter = toRO_Chapter(chapter);
             ro_chapters.add(ro_chapter);
         }
         return ro_chapters;
     }
+
+    public static ArrayList<RO_Chapter> toRO_Chapters_ArrayList (Collection<RO_Chapter> ro_chapters) {
+        ArrayList<RO_Chapter> ro_chapters_list = new ArrayList<>();
+        ro_chapters_list.addAll(ro_chapters);
+        return ro_chapters_list;
+    }
+
+    public static ArrayList<RO_DPDP> toRO_DPDPs_ArrayList (Collection<RO_DPDP> ro_dpdps) {
+        ArrayList<RO_DPDP> ro_dpdps_list = new ArrayList<>();
+        ro_dpdps_list.addAll(ro_dpdps);
+        return ro_dpdps_list;
+    }
+
 
     public static ArrayList<RO_ChemicalEquation> toRO_CEs(ArrayList<ChemicalEquation> equations) {
         ArrayList<RO_ChemicalEquation> ro_ces = new ArrayList<>();
@@ -79,13 +92,13 @@ public class ROConverter {
     }
 
 
-
-
+    // Single object
+    // Normal model to Realm Model
     public static RO_Chapter toRO_Chapter (Chapter chapter) {
         RO_Chapter ro_chapter = new RO_Chapter();
         ro_chapter.setName(chapter.getName());
         ro_chapter.setId(chapter.getid());
-        ro_chapter.setLessons(ROConverter.toRO_Lessons(chapter.getLessons()));
+        ro_chapter.setLessons(chapter.getRo_lessons());
         return ro_chapter;
     }
 
@@ -144,4 +157,6 @@ public class ROConverter {
         ro_element.setSymbol(element.getSymbol());
         return ro_element;
     }
+
+
 }

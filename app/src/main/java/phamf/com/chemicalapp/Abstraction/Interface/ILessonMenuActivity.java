@@ -35,6 +35,8 @@ public interface ILessonMenuActivity {
 
         /** Bring lesson to top of recent learning lesson list in realm database  **/
         void bringToTop (RO_Lesson ro_lesson);
+
+        void clearAllListenerToDatabase ();
     }
 
 }

@@ -40,6 +40,7 @@ import phamf.com.chemicalapp.Adapter.Search_CE_RCV_Adapter;
 import phamf.com.chemicalapp.CustomAnimation.FadedInAnim;
 import phamf.com.chemicalapp.CustomAnimation.FadedOutAnim;
 import phamf.com.chemicalapp.CustomView.ViewPagerIndicator;
+import phamf.com.chemicalapp.Database.UpdateDatabaseManager;
 import phamf.com.chemicalapp.Manager.AppThemeManager;
 import phamf.com.chemicalapp.Manager.FloatingSearchViewManager;
 import phamf.com.chemicalapp.Presenter.MainActivityPresenter;
@@ -196,7 +197,9 @@ public class MainActivity extends FullScreenActivity implements IMainActivity.Vi
 
         activityPresenter.requirePermission(CODE_DRAW_OVER_OTHER_APP_PERMISSION);
 
-        activityPresenter.checkUpdateStatus();
+        UpdateDatabaseManager manager = new UpdateDatabaseManager(this);
+
+//        activityPresenter.checkUpdateStatus();
 
     }
 
@@ -212,6 +215,11 @@ public class MainActivity extends FullScreenActivity implements IMainActivity.Vi
         } else {
             super.onActivityResult(requestCode, resultCode, data);
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
     }
 
     @Override
@@ -581,10 +589,4 @@ public class MainActivity extends FullScreenActivity implements IMainActivity.Vi
     }
 
 }
-
-
-
-
-
-
 

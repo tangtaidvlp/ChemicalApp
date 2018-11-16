@@ -5,9 +5,12 @@ import android.content.Context;
 import java.util.Collection;
 
 import io.realm.Realm;
+import io.realm.RealmChangeListener;
 import io.realm.RealmConfiguration;
+import io.realm.RealmModel;
 import io.realm.RealmObject;
 import io.realm.RealmResults;
+import phamf.com.chemicalapp.RO_Model.RO_Chapter;
 
 public class OfflineDatabaseManager  {
 
@@ -15,7 +18,7 @@ public class OfflineDatabaseManager  {
 
     public OfflineDatabaseManager (Context context) {
         Realm.init(context);
-        realm = Realm.getInstance(new RealmConfiguration.Builder().name("database.realm").schemaVersion(6).build());
+        realm = Realm.getInstance(new RealmConfiguration.Builder().name("database.realm").schemaVersion(1).build());
     }
 
     public <E extends RealmObject> RealmResults<E> readAllDataOf(Class<E> dataType) {
@@ -24,6 +27,10 @@ public class OfflineDatabaseManager  {
 
     public <E extends RealmObject> RealmResults<E> readSomeDataOf(Class<E> dataType, String whereField, int value) {
         return realm.where(dataType).equalTo(whereField, value).findAll();
+    }
+
+    public <E extends RealmObject> E readOneObjectOf(Class<E> dataType, String whereField, int value) {
+        return realm.where(dataType).equalTo(whereField, value).findFirst();
     }
 
         public <E extends RealmObject> void addOrUpdateDataOf (Class<E> dataType, Collection<E> value) {
@@ -53,6 +60,12 @@ public class OfflineDatabaseManager  {
         return result;
     }
 
+    public <E extends RealmObject> E readAsyncOneOf (Class<E> dataType, RealmChangeListener<E> querySucessListener) {
+        E result = realm.where(dataType).findFirstAsync();
+        result.addChangeListener(querySucessListener);
+        return result;
+    }
+
     public void beginTransaction () {
         realm.beginTransaction();
     }
@@ -61,6 +74,11 @@ public class OfflineDatabaseManager  {
         realm.commitTransaction();
     }
 
+    public <E extends RealmObject> RealmResults<E> readAsyncAllDataOf(Class<E> dataType, RealmChangeListener<RealmResults<E>> realmChangeListener) {
+        RealmResults<E> results = realm.where(dataType).findAllAsync();
+        results.addChangeListener(realmChangeListener);
+        return results;
+    }
 
 
 //    @Override

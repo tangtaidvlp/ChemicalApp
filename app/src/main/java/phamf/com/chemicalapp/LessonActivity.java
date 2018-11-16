@@ -235,73 +235,76 @@ public class LessonActivity extends FullScreenActivity implements ILessonActivit
 
     }
 
+
+    /**
+     * @see LessonActivityPresenter
+     */
     @Override
     public void OnDataLoadSuccess(String title, String content) {
+//        String soft_content = BIG_TITLE + BOLD_TEXT + "A. Tính chất hóa học" + COMPONENT_DEVIDER
+//                + SMALL_TITLE + BOLD_TEXT + "1) Tác dụng với Bazo" + COMPONENT_DEVIDER
+//                + CONTENT + BOLD_TEXT + "Khi tác dụng với các Bazo mạnh như NaOH, BaOH, ..." +
+//                " Chất a tạo kết tủa trắng \n đồng thời giải phóng 1 lượng lớn CO2." +
+//                " Khi tác dụng với các Bazo mạnh như NaOH, BaOH, " +
+//                "... Chất a tạo kết tủa trắng \n đồng thời giải phóng 1 lượng lớn CO2" +
+//                "." + COMPONENT_DEVIDER + IMAGE + R.drawable.background_search_view
+//                + TAG_DIVIDER + 400 + TAG_DIVIDER + 100 + TAG_DIVIDER + COMPONENT_DEVIDER
+//                + CONTENT + BOLD_TEXT + "Khi tác dụng với các Bazo mạnh như NaOH, BaOH, ..." +
+//                " Chất a tạo kết tủa trắng \n đồng thời giải phóng 1 lượng lớn CO2." +
+//                " Khi tác dụng với các Bazo mạnh như NaOH, BaOH, " +
+//                "... Chất a tạo kết tủa trắng \n đồng thời giải phóng 1 lượng lớn CO2" +
+//                "." + COMPONENT_DEVIDER
+//                + CONTENT + BOLD_TEXT + "Khi tác dụng với các Bazo mạnh như NaOH, BaOH, ..." +
+//                " Chất a tạo kết tủa trắng \n đồng thời giải phóng 1 lượng lớn CO2." +
+//                " Khi tác dụng với các Bazo mạnh như NaOH, BaOH, " +
+//                "... Chất a tạo kết tủa trắng \n đồng thời giải phóng 1 lượng lớn CO2" +
+//                "." + COMPONENT_DEVIDER
+//                + SMALL_TITLE + BOLD_TEXT + "2) Tác dụng với Bazo" + COMPONENT_DEVIDER
+//                + CONTENT + BOLD_TEXT + "Khi tác dụng với các Bazo mạnh như NaOH, BaOH, ..." +
+//                " Chất a tạo kết tủa trắng \n đồng thời giải phóng 1 lượng lớn CO2." +
+//                " Khi tác dụng với các Bazo mạnh như NaOH, BaOH, " +
+//                "... Chất a tạo kết tủa trắng \n đồng thời giải phóng 1 lượng lớn CO2" +
+//                "." + COMPONENT_DEVIDER
+//                + CONTENT + BOLD_TEXT + "Khi tác dụng với các Bazo mạnh như NaOH, BaOH, ..." +
+//                " Chất a tạo kết tủa trắng \n đồng thời giải phóng 1 lượng lớn CO2." +
+//                " Khi tác dụng với các Bazo mạnh như NaOH, BaOH, " +
+//                "... Chất a tạo kết tủa trắng \n đồng thời giải phóng 1 lượng lớn CO2" +
+//                "." + COMPONENT_DEVIDER
+//                + CONTENT + BOLD_TEXT + "Khi tác dụng với các Bazo mạnh như NaOH, BaOH, ..." +
+//                " Chất a tạo kết tủa trắng \n đồng thời giải phóng 1 lượng lớn CO2." +
+//                " Khi tác dụng với các Bazo mạnh như NaOH, BaOH, " +
+//                "... Chất a tạo kết tủa trắng \n đồng thời giải phóng 1 lượng lớn CO2" +
+//                "." + COMPONENT_DEVIDER
+//                + SMALL_TITLE + BOLD_TEXT + "3) Tác dụng với Bazo" + COMPONENT_DEVIDER
+//                + CONTENT + BOLD_TEXT + "Khi tác dụng với các Bazo mạnh như NaOH, BaOH, ..." +
+//                " Chất a tạo kết tủa trắng \n đồng thời giải phóng 1 lượng lớn CO2." +
+//                " Khi tác dụng với các Bazo mạnh như NaOH, BaOH, " +
+//                "... Chất a tạo kết tủa trắng \n đồng thời giải phóng 1 lượng lớn CO2" +
+//                "." + COMPONENT_DEVIDER
+//                + CONTENT + BOLD_TEXT + "Khi tác dụng với các Bazo mạnh như NaOH, BaOH, ..." +
+//                " Chất a tạo kết tủa trắng \n đồng thời giải phóng 1 lượng lớn CO2." +
+//                " Khi tác dụng với các Bazo mạnh như NaOH, BaOH, " +
+//                "... Chất a tạo kết tủa trắng \n đồng thời giải phóng 1 lượng lớn CO2" +
+//                "." + COMPONENT_DEVIDER
+//                + CONTENT + BOLD_TEXT + "Khi tác dụng với các Bazo mạnh như NaOH, BaOH, ..." +
+//                " Chất a tạo kết tủa trắng \n đồng thời giải phóng 1 lượng lớn CO2." +
+//                " Khi tác dụng với các Bazo mạnh như NaOH, BaOH, " +
+//                "... Chất a tạo kết tủa trắng \n đồng thời giải phóng 1 lượng lớn CO2" +
+//                "." + COMPONENT_DEVIDER
+//                + PART_DEVIDER
+//                + BIG_TITLE + BOLD_TEXT  + "Here is Big title2" + COMPONENT_DEVIDER
+//                + SMALL_TITLE + BOLD_TEXT + "Here is Small Title2" + COMPONENT_DEVIDER
+//                + CONTENT + BOLD_TEXT + "Here is Content2" + COMPONENT_DEVIDER
+//                + PART_DEVIDER
+//                + BIG_TITLE + BOLD_TEXT + "Here is Big title3" + COMPONENT_DEVIDER
+//                + SMALL_TITLE + BOLD_TEXT + "Here is Small Title3" + COMPONENT_DEVIDER
+//                + CONTENT + BOLD_TEXT + "Here is Content3" + COMPONENT_DEVIDER
+//                + PART_DEVIDER
+//                + BIG_TITLE + BOLD_TEXT + "Here is Big title3" + COMPONENT_DEVIDER
+//                + SMALL_TITLE + BOLD_TEXT + "Here is Small Title3" + COMPONENT_DEVIDER
+//                + CONTENT + BOLD_TEXT + "Here is Content3" + COMPONENT_DEVIDER;
 
-        String soft_content = BIG_TITLE + BOLD_TEXT + "A. Tính chất hóa học" + COMPONENT_DEVIDER
-                + SMALL_TITLE + BOLD_TEXT + "1) Tác dụng với Bazo" + COMPONENT_DEVIDER
-                + CONTENT + BOLD_TEXT + "Khi tác dụng với các Bazo mạnh như NaOH, BaOH, ..." +
-                " Chất a tạo kết tủa trắng \n đồng thời giải phóng 1 lượng lớn CO2." +
-                " Khi tác dụng với các Bazo mạnh như NaOH, BaOH, " +
-                "... Chất a tạo kết tủa trắng \n đồng thời giải phóng 1 lượng lớn CO2" +
-                "." + COMPONENT_DEVIDER + IMAGE + R.drawable.background_search_view
-                + TAG_DIVIDER + 400 + TAG_DIVIDER + 100 + TAG_DIVIDER + COMPONENT_DEVIDER
-                + CONTENT + BOLD_TEXT + "Khi tác dụng với các Bazo mạnh như NaOH, BaOH, ..." +
-                " Chất a tạo kết tủa trắng \n đồng thời giải phóng 1 lượng lớn CO2." +
-                " Khi tác dụng với các Bazo mạnh như NaOH, BaOH, " +
-                "... Chất a tạo kết tủa trắng \n đồng thời giải phóng 1 lượng lớn CO2" +
-                "." + COMPONENT_DEVIDER
-                + CONTENT + BOLD_TEXT + "Khi tác dụng với các Bazo mạnh như NaOH, BaOH, ..." +
-                " Chất a tạo kết tủa trắng \n đồng thời giải phóng 1 lượng lớn CO2." +
-                " Khi tác dụng với các Bazo mạnh như NaOH, BaOH, " +
-                "... Chất a tạo kết tủa trắng \n đồng thời giải phóng 1 lượng lớn CO2" +
-                "." + COMPONENT_DEVIDER
-                + SMALL_TITLE + BOLD_TEXT + "2) Tác dụng với Bazo" + COMPONENT_DEVIDER
-                + CONTENT + BOLD_TEXT + "Khi tác dụng với các Bazo mạnh như NaOH, BaOH, ..." +
-                " Chất a tạo kết tủa trắng \n đồng thời giải phóng 1 lượng lớn CO2." +
-                " Khi tác dụng với các Bazo mạnh như NaOH, BaOH, " +
-                "... Chất a tạo kết tủa trắng \n đồng thời giải phóng 1 lượng lớn CO2" +
-                "." + COMPONENT_DEVIDER
-                + CONTENT + BOLD_TEXT + "Khi tác dụng với các Bazo mạnh như NaOH, BaOH, ..." +
-                " Chất a tạo kết tủa trắng \n đồng thời giải phóng 1 lượng lớn CO2." +
-                " Khi tác dụng với các Bazo mạnh như NaOH, BaOH, " +
-                "... Chất a tạo kết tủa trắng \n đồng thời giải phóng 1 lượng lớn CO2" +
-                "." + COMPONENT_DEVIDER
-                + CONTENT + BOLD_TEXT + "Khi tác dụng với các Bazo mạnh như NaOH, BaOH, ..." +
-                " Chất a tạo kết tủa trắng \n đồng thời giải phóng 1 lượng lớn CO2." +
-                " Khi tác dụng với các Bazo mạnh như NaOH, BaOH, " +
-                "... Chất a tạo kết tủa trắng \n đồng thời giải phóng 1 lượng lớn CO2" +
-                "." + COMPONENT_DEVIDER
-                + SMALL_TITLE + BOLD_TEXT + "3) Tác dụng với Bazo" + COMPONENT_DEVIDER
-                + CONTENT + BOLD_TEXT + "Khi tác dụng với các Bazo mạnh như NaOH, BaOH, ..." +
-                " Chất a tạo kết tủa trắng \n đồng thời giải phóng 1 lượng lớn CO2." +
-                " Khi tác dụng với các Bazo mạnh như NaOH, BaOH, " +
-                "... Chất a tạo kết tủa trắng \n đồng thời giải phóng 1 lượng lớn CO2" +
-                "." + COMPONENT_DEVIDER
-                + CONTENT + BOLD_TEXT + "Khi tác dụng với các Bazo mạnh như NaOH, BaOH, ..." +
-                " Chất a tạo kết tủa trắng \n đồng thời giải phóng 1 lượng lớn CO2." +
-                " Khi tác dụng với các Bazo mạnh như NaOH, BaOH, " +
-                "... Chất a tạo kết tủa trắng \n đồng thời giải phóng 1 lượng lớn CO2" +
-                "." + COMPONENT_DEVIDER
-                + CONTENT + BOLD_TEXT + "Khi tác dụng với các Bazo mạnh như NaOH, BaOH, ..." +
-                " Chất a tạo kết tủa trắng \n đồng thời giải phóng 1 lượng lớn CO2." +
-                " Khi tác dụng với các Bazo mạnh như NaOH, BaOH, " +
-                "... Chất a tạo kết tủa trắng \n đồng thời giải phóng 1 lượng lớn CO2" +
-                "." + COMPONENT_DEVIDER
-                + PART_DEVIDER
-                + BIG_TITLE + BOLD_TEXT  + "Here is Big title2" + COMPONENT_DEVIDER
-                + SMALL_TITLE + BOLD_TEXT + "Here is Small Title2" + COMPONENT_DEVIDER
-                + CONTENT + BOLD_TEXT + "Here is Content2" + COMPONENT_DEVIDER
-                + PART_DEVIDER
-                + BIG_TITLE + BOLD_TEXT + "Here is Big title3" + COMPONENT_DEVIDER
-                + SMALL_TITLE + BOLD_TEXT + "Here is Small Title3" + COMPONENT_DEVIDER
-                + CONTENT + BOLD_TEXT + "Here is Content3" + COMPONENT_DEVIDER
-                + PART_DEVIDER
-                + BIG_TITLE + BOLD_TEXT + "Here is Big title3" + COMPONENT_DEVIDER
-                + SMALL_TITLE + BOLD_TEXT + "Here is Small Title3" + COMPONENT_DEVIDER
-                + CONTENT + BOLD_TEXT + "Here is Content3" + COMPONENT_DEVIDER;
-
-        separatePart_And_BindDataToViewPG(soft_content);
+        separatePart_And_BindDataToViewPG(content);
         if (vpg_indicator.isHasTitle()) {
             vpg_indicator.setTitle_list(vpg_lesson_adapter.getTitles());
         }

@@ -8,7 +8,6 @@ import io.realm.annotations.PrimaryKey;
 
 public class Recent_SearchingCEs extends RealmObject implements Cloneable{
 
-
     int id;
 
     private RealmList<RO_ChemicalEquation> recent_searching_ces = new RealmList<>();

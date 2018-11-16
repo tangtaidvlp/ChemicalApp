@@ -49,7 +49,6 @@ public class OnlineDatabaseManager {
 
     private final String UPDATE_STATUS = "UpdateStatus";
 
-
     private boolean isAvailable;
 
     DatabaseReference mRef;
@@ -57,7 +56,6 @@ public class OnlineDatabaseManager {
     DatabaseReference updateDataRef;
 
     private OnDataLoaded onDataLoaded;
-
 
 
     public OnlineDatabaseManager () {

@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 
+import io.realm.RealmList;
 import io.realm.RealmResults;
 import phamf.com.chemicalapp.Abstraction.Interface.IMainActivity;
 import phamf.com.chemicalapp.Abstraction.Interface.OnThemeChangeListener;
@@ -202,9 +203,12 @@ public class MainActivityPresenter extends Presenter<MainActivity> implements IM
         ArrayList <RO_ChemicalEquation> data = new ArrayList<>();
 
         recentSearching_ce_data_manager = new RecentSearching_CE_Data_Manager(offlineDB_manager);
+        recentSearching_ce_data_manager.setOnGetDataSuccess(recent_Ces ->
+        {
+            data.addAll(recent_Ces);
+            onDataLoadListener.onDataLoadSuccess(data);
+        });
 
-        data.addAll(recentSearching_ce_data_manager.getData());
-        onDataLoadListener.onDataLoadSuccess(data);
     }
 
     public void turnOnNightMode () {

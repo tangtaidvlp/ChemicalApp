@@ -9,6 +9,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import phamf.com.chemicalapp.Abstraction.AbstractClass.RCV_Menu_Adapter;
@@ -23,7 +25,7 @@ import phamf.com.chemicalapp.Manager.FullScreenManager;
  * Presenter
  * @see DPDPMenuActivityPresenter
  */
-public class DPDPMenuActivity extends FullScreenActivity implements IDPDPMenuActivity.View{
+public class DPDPMenuActivity extends FullScreenActivity implements IDPDPMenuActivity.View, DPDPMenuActivityPresenter.OnDataLoadSuccess{
 
     public static final String DPDP_NAME = "dpdp_name";
 
@@ -51,6 +53,8 @@ public class DPDPMenuActivity extends FullScreenActivity implements IDPDPMenuAct
         ButterKnife.bind(this);
 
         dpdpMenuActivityPresenter = new DPDPMenuActivityPresenter(this);
+
+        dpdpMenuActivityPresenter.setOnDataLoadListener(this);
 
         setTheme();
 
@@ -92,4 +96,8 @@ public class DPDPMenuActivity extends FullScreenActivity implements IDPDPMenuAct
         }
     }
 
+    @Override
+    public void onDataLoadSuccess(ArrayList<RO_DPDP> ro_dpdps) {
+        rcv_dpdp_adapter.setData(ro_dpdps);
+    }
 }

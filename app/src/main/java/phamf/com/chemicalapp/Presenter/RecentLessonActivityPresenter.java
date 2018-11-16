@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 
 import java.util.ArrayList;
 
+import io.realm.RealmList;
 import phamf.com.chemicalapp.Abstraction.AbstractClass.Presenter;
 import phamf.com.chemicalapp.Abstraction.Interface.IRecentLessonActivity;
 import phamf.com.chemicalapp.Database.OfflineDatabaseManager;
@@ -22,8 +23,6 @@ public class RecentLessonActivityPresenter extends Presenter<RecentLessonsActivi
 
     OfflineDatabaseManager offline_DBManager;
 
-    Recent_LearningLessons recent_learningLessons;
-
     RecentLearningLessonDataManager recentLearningLessonDataManager;
 
 
@@ -40,11 +39,14 @@ public class RecentLessonActivityPresenter extends Presenter<RecentLessonsActivi
             offline_DBManager.addOrUpdateDataOf(Recent_LearningLessons.class, recent_learningLessons);
         }
 
-        recentLearningLessonDataManager = new RecentLearningLessonDataManager(offline_DBManager);
-        recent_learningLessons = offline_DBManager.readOneOf(Recent_LearningLessons.class);
         ArrayList<RO_Lesson> data = new ArrayList<>();
-        data.addAll(recent_learningLessons.getRecent_learning_lessons());
-        onDataLoadListener.onDataLoadSuccess(data);
+        recentLearningLessonDataManager = new RecentLearningLessonDataManager(offline_DBManager);
+        recentLearningLessonDataManager.setOnGetDataSuccess(recent_Ces ->
+        {
+            data.addAll(recent_Ces);
+            onDataLoadListener.onDataLoadSuccess(data);
+        });
+
     }
 
     public void setOnDataLoadListener(DataLoadListener onDataLoadListener) {

@@ -10,7 +10,9 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -52,11 +54,12 @@ public class LessonMenuActivity extends FullScreenActivity implements ILessonMen
 
     @BindView(R.id.parent_lesson_menu_activity) ConstraintLayout base_view;
 
+    @BindView(R.id.circle_pb_lesson_menu)
+    ProgressBar circle_progress_bar_lesson_menu;
 
     Animation turnOnChapterButton_disappear, chapter_disappear, lesson_disappear;
 
     Animation turnOnChapterButton_appear, chapter_appear, lesson_appear;
-
 
 
     LessonMenuActivityPresenter activityPresenter;
@@ -86,18 +89,23 @@ public class LessonMenuActivity extends FullScreenActivity implements ILessonMen
         addEvent();
 
         activityPresenter.loadData();
+    }
 
+    public void toast () {
+        Toast.makeText(this, "Oops", Toast.LENGTH_SHORT).show();
     }
 
     @Override
     protected void onPause() {
         super.onPause();
+        activityPresenter.clearAllListenerToDatabase();
         activityPresenter.pushCachingDataToDB();
     }
 
     @Override
     public void onDataLoadedSuccess(ArrayList<RO_Chapter> data) {
         chapter_menu_adapter.setData(data);
+        circle_progress_bar_lesson_menu.setVisibility(View.GONE);
     }
 
     public void addControl() {
@@ -120,7 +128,6 @@ public class LessonMenuActivity extends FullScreenActivity implements ILessonMen
             rcv_lesson_menu.startAnimation(lesson_disappear);
             txt_title.setText("Chương");
         });
-
 
         btn_back.setOnClickListener(v -> finish());
 

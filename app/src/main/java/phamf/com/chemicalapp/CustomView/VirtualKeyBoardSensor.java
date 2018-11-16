@@ -10,9 +10,6 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.widget.EditText;
 
-/**
- * This edittext has a
- */
 public class VirtualKeyBoardSensor extends android.support.v7.widget.AppCompatEditText {
 
   private OnHideVirtualKeyboardListener onHideListener;

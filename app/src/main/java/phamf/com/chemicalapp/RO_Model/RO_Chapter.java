@@ -2,11 +2,15 @@ package phamf.com.chemicalapp.RO_Model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Random;
 
 import io.realm.RealmList;
 import io.realm.RealmObject;
+import io.realm.annotations.Ignore;
 import io.realm.annotations.PrimaryKey;
 import phamf.com.chemicalapp.Abstraction.Interface.Menuable;
 
@@ -24,6 +28,11 @@ public class RO_Chapter extends RealmObject implements Menuable, Parcelable{
         name = in.readString();
         in.readList(lessons, getClass().getClassLoader());
     }
+
+    public RO_Chapter() {
+
+    }
+
 
     public static final Creator<RO_Chapter> CREATOR = new Creator<RO_Chapter>() {
         @Override
@@ -43,10 +52,6 @@ public class RO_Chapter extends RealmObject implements Menuable, Parcelable{
 
     public void setLessons(Collection<RO_Lesson> lessons) {
         this.lessons.addAll(lessons);
-    }
-
-    public RO_Chapter() {
-
     }
 
     public int getId() {

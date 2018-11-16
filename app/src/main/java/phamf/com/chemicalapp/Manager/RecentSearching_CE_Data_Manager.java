@@ -5,6 +5,7 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import io.realm.RealmChangeListener;
 import io.realm.RealmList;
 import phamf.com.chemicalapp.Database.OfflineDatabaseManager;
 import phamf.com.chemicalapp.RO_Model.RO_ChemicalEquation;
@@ -18,17 +19,26 @@ public class RecentSearching_CE_Data_Manager {
 
     private OfflineDatabaseManager offline_DBManager;
 
+    private OnGetDataSuccess onGetDataSuccess;
+
     public RecentSearching_CE_Data_Manager(OfflineDatabaseManager offline_DBManager) {
         this.offline_DBManager = offline_DBManager;
 
-        recent_searchingCEs = offline_DBManager.readOneOf(Recent_SearchingCEs.class);
-        recent_CEs = recent_searchingCEs.getRecent_searching_ces();
+        recent_searchingCEs =
+           offline_DBManager
+              .readAsyncOneOf(Recent_SearchingCEs.class
+                  , recent_searchingCEs ->
+        {
+            recent_CEs = recent_searchingCEs.getRecent_searching_ces();
 
-        if (recent_CEs.size() == 0) {
-            offline_DBManager.beginTransaction();
-            recent_CEs.addAll(offline_DBManager.readAllDataOf(RO_ChemicalEquation.class));
-            offline_DBManager.commitTransaction();
-        }
+            if (recent_CEs.size() == 0) {
+                offline_DBManager.beginTransaction();
+                recent_CEs.addAll(offline_DBManager.readAllDataOf(RO_ChemicalEquation.class));
+                offline_DBManager.commitTransaction();
+            }
+
+            if (onGetDataSuccess != null) onGetDataSuccess.onLoadSuccess(recent_CEs);
+        });
 
     }
 
@@ -55,5 +65,13 @@ public class RecentSearching_CE_Data_Manager {
 
     public RealmList<RO_ChemicalEquation> getData() {
         return recent_CEs;
+    }
+
+    public void setOnGetDataSuccess (OnGetDataSuccess onGetDataSuccess) {
+        this.onGetDataSuccess = onGetDataSuccess;
+    }
+
+    public interface OnGetDataSuccess {
+        void onLoadSuccess (RealmList<RO_ChemicalEquation> recent_Ces);
     }
 }

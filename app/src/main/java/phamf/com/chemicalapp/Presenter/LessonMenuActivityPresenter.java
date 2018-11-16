@@ -1,9 +1,12 @@
 package phamf.com.chemicalapp.Presenter;
 
+import android.os.AsyncTask;
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import java.util.ArrayList;
 
+import io.realm.RealmChangeListener;
 import io.realm.RealmList;
 import io.realm.RealmResults;
 import phamf.com.chemicalapp.Abstraction.AbstractClass.Presenter;
@@ -14,49 +17,53 @@ import phamf.com.chemicalapp.Manager.RecentLearningLessonDataManager;
 import phamf.com.chemicalapp.RO_Model.RO_Chapter;
 import phamf.com.chemicalapp.RO_Model.RO_Lesson;
 import phamf.com.chemicalapp.RO_Model.Recent_LearningLessons;
+import phamf.com.chemicalapp.Supporter.ROConverter;
+
+import static phamf.com.chemicalapp.Supporter.ROConverter.toRO_Chapters_ArrayList;
 
 /**
  *@see LessonMenuActivity
  */
 public class LessonMenuActivityPresenter extends Presenter<LessonMenuActivity> implements ILessonMenuActivity.Presenter{
 
-    private OfflineDatabaseManager offlineDB_manager;
-
     private DataLoadListener onDataLoadListener;
 
-    private Recent_LearningLessons recent_learningLessons;
-
-    private RealmList<RO_Lesson> lessons = new RealmList<>();
+    private OfflineDatabaseManager offlineDB_manager;
 
     private RecentLearningLessonDataManager recentLearningLessonDataManager;
 
+    private RealmResults<RO_Chapter> data;
+
     public LessonMenuActivityPresenter(@NonNull LessonMenuActivity view) {
         super(view);
-        offlineDB_manager = new OfflineDatabaseManager(context);
-    }
-
-    public RealmResults<RO_Chapter> getAll_Chapters_FromDB () {
-        return offlineDB_manager.readAllDataOf(RO_Chapter.class);
+        recentLearningLessonDataManager = new RecentLearningLessonDataManager(new OfflineDatabaseManager(view));
     }
 
     public void loadData() {
-        if (onDataLoadListener == null) return;
 
+        offlineDB_manager = new OfflineDatabaseManager(context);
+
+        // At the first time, check whether or not an object in realm db storing
+        // a recent_learning_lessons object
+        // If there's no object, create new one
+        // If true, do nothing
         if (offlineDB_manager.readOneOf(Recent_LearningLessons.class) == null) {
             Recent_LearningLessons recent_learningLessons = new Recent_LearningLessons();
             offlineDB_manager.addOrUpdateDataOf(Recent_LearningLessons.class, recent_learningLessons);
         }
 
-        recentLearningLessonDataManager = new RecentLearningLessonDataManager(offlineDB_manager);
-        RealmResults<RO_Chapter> chapters_list_data = getAll_Chapters_FromDB();
-        ArrayList<RO_Chapter> data = new ArrayList<>();
+        data = offlineDB_manager.readAsyncAllDataOf(RO_Chapter.class, ro_chapters ->
+                onDataLoadListener.onDataLoadedSuccess(toRO_Chapters_ArrayList(ro_chapters)
+        ));
 
-        data.addAll(chapters_list_data);
-        onDataLoadListener.onDataLoadedSuccess(data);
     }
 
     public void pushCachingDataToDB () {
         recentLearningLessonDataManager.updateDB();
+    }
+
+    public void clearAllListenerToDatabase () {
+        data.removeAllChangeListeners();
     }
 
     /** Bring this lesson to top of recent learning lesson list in realm database  **/
@@ -68,6 +75,8 @@ public class LessonMenuActivityPresenter extends Presenter<LessonMenuActivity> i
         this.onDataLoadListener = onDataLoadListener;
     }
 
+    /** @see LessonMenuActivity
+     */
     public interface DataLoadListener {
 
         void onDataLoadedSuccess (ArrayList<RO_Chapter> ro_chapters);
