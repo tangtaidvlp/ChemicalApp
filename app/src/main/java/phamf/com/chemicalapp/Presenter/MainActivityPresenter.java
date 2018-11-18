@@ -19,7 +19,7 @@ import phamf.com.chemicalapp.Abstraction.Interface.IMainActivity;
 import phamf.com.chemicalapp.Abstraction.Interface.OnThemeChangeListener;
 import phamf.com.chemicalapp.Abstraction.AbstractClass.Presenter;
 import phamf.com.chemicalapp.Database.OfflineDatabaseManager;
-import phamf.com.chemicalapp.Database.OnlineDatabaseManager;
+import phamf.com.chemicalapp.Database.UpdateDatabaseManager;
 import phamf.com.chemicalapp.MainActivity;
 import phamf.com.chemicalapp.Manager.AppThemeManager;
 import phamf.com.chemicalapp.Manager.RecentSearching_CE_Data_Manager;
@@ -39,10 +39,10 @@ import static android.content.Context.MODE_PRIVATE;
 /**
  * @see MainActivity
  */
-public class MainActivityPresenter extends Presenter<MainActivity> implements IMainActivity.Presenter, OnlineDatabaseManager.OnDataLoaded{
+public class MainActivityPresenter extends Presenter<MainActivity> implements IMainActivity.Presenter{
 
 
-    private OnlineDatabaseManager onlineDB_manager;
+    private UpdateDatabaseManager updateDB_Manager;
 
     private OfflineDatabaseManager offlineDB_manager;
 
@@ -68,72 +68,25 @@ public class MainActivityPresenter extends Presenter<MainActivity> implements IM
 
         this.context = view.getBaseContext();
 
-        onlineDB_manager = new OnlineDatabaseManager();
-
-        onlineDB_manager.setOnDataLoaded(this);
+        updateDB_Manager = new UpdateDatabaseManager(view, getDataVersion());
 
         offlineDB_manager = new OfflineDatabaseManager(context);
 
         requireOverlayPermissionManager = new RequireOverlayPermissionManager(view);
     }
 
+    public void update (OnUpdateSuccess onUpdateSuccess) {
+        updateDB_Manager.setOnASectionUpdated((version, isLastVersion) -> {
+            if (isLastVersion) {
+                onUpdateSuccess.onUpdateSuccess();
+            } else {
+                saveDataVersion(version);
+            }
+        });
 
+        updateDB_Manager.update();
 
-// Update Offline Database
-    public void updateAll_CE_OFFDB () {
-        onlineDB_manager.getAll_CE_Data();
     }
-
-    public void updateAll_Chapter_OFFDB () {
-        onlineDB_manager.getAll_Chapter_Data();
-    }
-
-    public void updateAll_DPDP_OFFDB() {
-        onlineDB_manager.getAll_DPDP();
-    }
-
-    public void updateAll_BangTuanHoan_OFFDB () {onlineDB_manager.getAllBangTuanHoan();}
-
-
-    public void update_new_version_CE_OFFDB () {
-        onlineDB_manager.getNeedingUpdate_CE();
-    }
-
-    public void update_new_version_Chapter_OFFDB () {
-        onlineDB_manager.getNeedingUpdate_Chapter();
-    }
-
-    public void update_new_version_DPDP_OFFDB() {
-        onlineDB_manager.getNeedingUpdate_DPDP();
-    }
-
-    public void update_new_version_BangTuanHoan_OFFDB () {
-        onlineDB_manager.getNeedingUpdate_BangTuanHoan();
-    }
-
-// Get data from Offline database
-    public RealmResults<RO_Chapter> get_Chapters_FromDB (String field, int value) {
-        return offlineDB_manager.readSomeDataOf(RO_Chapter.class, field, value);
-    }
-
-    public RealmResults<RO_ChemicalEquation> get_CEs_FromDB (String field, int value) {
-        return offlineDB_manager.readSomeDataOf(RO_ChemicalEquation.class, field, value);
-    }
-
-    public RealmResults<RO_Chapter> get_All_Chapters_FromDB () {
-        return offlineDB_manager.readAllDataOf(RO_Chapter.class);
-    }
-
-    public RealmResults<RO_ChemicalEquation> get_All_CEs_FromDB () {
-        return offlineDB_manager.readAllDataOf(RO_ChemicalEquation.class);
-    }
-
-    public RealmResults<RO_Chemical_Element> get_All_Chemical_Element_FromDB () {
-        return offlineDB_manager.readAllDataOf(RO_Chemical_Element.class);
-    }
-
-
-
 
 // Else
 
@@ -164,7 +117,7 @@ public class MainActivityPresenter extends Presenter<MainActivity> implements IM
         return databaseVersion.getLong(DATABASE_VERSION, 1);
     }
 
-    public void saveDataVersion (int version) {
+    public void saveDataVersion (long version) {
         SharedPreferences databaseVersion = view.getSharedPreferences(APP_INFO, MODE_PRIVATE);
         SharedPreferences.Editor editor = databaseVersion.edit();
         editor.putLong(DATABASE_VERSION, version);
@@ -250,50 +203,20 @@ public class MainActivityPresenter extends Presenter<MainActivity> implements IM
         recentSearching_ce_data_manager.bringToTop(ro_ce);
     }
 
-    public void checkUpdateStatus () {
-        onlineDB_manager.getUpdateStatus();
-    }
-
-    public void getUpdateVersion () {
-        onlineDB_manager.getVersionUpdate();
-    }
-
-
-    //Listener called by "onlineDB_manager.update_****()" function above to getData from Online Database
     @Override
-    public void onChapterLoadedFromFirebase(Chapter chapter) {
-        Log.e("NAME " , chapter.getName());
-        offlineDB_manager.addOrUpdateDataOf(RO_Chapter.class, ROConverter.toRO_Chapter(chapter));
+    public void checkUpdateStatus() {
+        updateDB_Manager.getLastestVersionUpdate(version -> {
+            // if firebase database version is bigger than app version, there's at least
+            // one update version available
+            onUpdateChecked.onStatusChecked(version > getDataVersion(), version);
+        });
     }
 
-    @Override
-    public void onCE_LoadedFromFirebase(ArrayList<ChemicalEquation> equations) {
-        offlineDB_manager.addOrUpdateDataOf(RO_ChemicalEquation.class, ROConverter.toRO_CEs(equations));
-    }
 
-    @Override
-    public void onDPDP_LoadedFromFirebase(DPDP dpdp) {
-        offlineDB_manager.addOrUpdateDataOf(RO_DPDP.class, ROConverter.toRO_DPDP(dpdp));
-    }
-
-    @Override
-    public void onChemElement_LoadedFromFirebase(Chemical_Element element) {
-        offlineDB_manager.addOrUpdateDataOf(RO_Chemical_Element.class, ROConverter.toRO_Chemical_Element(element));
-    }
-
-    @Override
-    public void onStatusLoaded(boolean isAvailable) {
-        onUpdateChecked.onStatusChecked(isAvailable);
-    }
-
-    @Override
-    public void onVersionLoaded(long version) {
-        onUpdateChecked.onVersionChecked(version);
-    }
 
     /**
      * @see MainActivity
-     * which implement all of this listeners to get Data
+     * which implement this listeners to get Data
      */
 
     public interface DataLoadListener {
@@ -304,9 +227,13 @@ public class MainActivityPresenter extends Presenter<MainActivity> implements IM
 
     public interface OnUpdateCheckedListener {
 
-        void onStatusChecked (boolean isAvailable);
+        void onStatusChecked (boolean isAvailable, long lasted_version);
 
-        void onVersionChecked (long version);
+    }
+
+    public interface OnUpdateSuccess {
+
+        void onUpdateSuccess ();
 
     }
 
@@ -329,6 +256,8 @@ public class MainActivityPresenter extends Presenter<MainActivity> implements IM
         }
 
     }
+
+
 
 }
 

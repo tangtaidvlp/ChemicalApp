@@ -29,6 +29,7 @@ import static android.support.test.espresso.Espresso.pressBack;
 import static android.support.test.espresso.action.ViewActions.clearText;
 import static android.support.test.espresso.action.ViewActions.click;
 import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard;
+import static android.support.test.espresso.action.ViewActions.scrollTo;
 import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.matcher.ViewMatchers.*;
@@ -89,6 +90,13 @@ public class MainActivityTest{
         onView(withId(R.id.btn_widget_color_6)).perform(click());
         onView(withId(R.id.txt_bangtuanhoang)).check(matches(hasTextColor(AppThemeManager.textColor_list[5])));
 
+    }
+
+    @Test
+    public void testUpdate () {
+        onView(withId(R.id.btn_setting)).perform(click());
+        onView(withId(R.id.btn_update)).perform(scrollTo());
+        onView(withId(R.id.btn_update)).perform(click());
     }
 
 }

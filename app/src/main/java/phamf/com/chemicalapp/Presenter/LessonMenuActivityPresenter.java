@@ -36,7 +36,6 @@ public class LessonMenuActivityPresenter extends Presenter<LessonMenuActivity> i
 
     public LessonMenuActivityPresenter(@NonNull LessonMenuActivity view) {
         super(view);
-        recentLearningLessonDataManager = new RecentLearningLessonDataManager(new OfflineDatabaseManager(view));
     }
 
     public void loadData() {
@@ -52,9 +51,17 @@ public class LessonMenuActivityPresenter extends Presenter<LessonMenuActivity> i
             offlineDB_manager.addOrUpdateDataOf(Recent_LearningLessons.class, recent_learningLessons);
         }
 
-        data = offlineDB_manager.readAsyncAllDataOf(RO_Chapter.class, ro_chapters ->
-                onDataLoadListener.onDataLoadedSuccess(toRO_Chapters_ArrayList(ro_chapters)
-        ));
+        recentLearningLessonDataManager = new RecentLearningLessonDataManager();
+        recentLearningLessonDataManager.setOnGetDataSuccess(recent_Ces -> {
+            data = offlineDB_manager.readAsyncAllDataOf(RO_Chapter.class, ro_chapters ->
+                    onDataLoadListener.onDataLoadedSuccess(toRO_Chapters_ArrayList(ro_chapters)
+                    ));
+        });
+        recentLearningLessonDataManager.getData(offlineDB_manager);
+
+
+
+
 
     }
 

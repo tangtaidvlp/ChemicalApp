@@ -104,7 +104,10 @@ public class ChemicalElementActivity extends FullScreenActivity implements IChem
 
         btn_bottom_turn_on_search_mode.setOnClickListener(v -> search_view_parent.startAnimation(fade_in));
 
-        btn_top_turn_off_search_mode.setOnClickListener(v -> search_view_parent.startAnimation(fade_out));
+        btn_top_turn_off_search_mode.setOnClickListener(v -> {
+            search_view_parent.startAnimation(fade_out);
+            hideSoftKeyboard();
+        });
 
         rcv_chem_element_search_adapter.setOnItemClickListener(element -> {
             onDataReceived(element);

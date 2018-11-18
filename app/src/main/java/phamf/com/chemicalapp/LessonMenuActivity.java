@@ -91,10 +91,6 @@ public class LessonMenuActivity extends FullScreenActivity implements ILessonMen
         activityPresenter.loadData();
     }
 
-    public void toast () {
-        Toast.makeText(this, "Oops", Toast.LENGTH_SHORT).show();
-    }
-
     @Override
     protected void onPause() {
         super.onPause();

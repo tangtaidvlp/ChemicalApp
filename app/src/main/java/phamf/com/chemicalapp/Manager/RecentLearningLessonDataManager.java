@@ -23,16 +23,20 @@ public class RecentLearningLessonDataManager {
     private final int MAX_RECENT_LEARNING_LESSON_COUNT = 12;
 
 
-    public RecentLearningLessonDataManager (OfflineDatabaseManager offlineDatabaseManager) {
+    public RecentLearningLessonDataManager () {
+
+    }
+
+    public void getData (OfflineDatabaseManager offlineDatabaseManager) {
         this.offlineDB_manager = offlineDatabaseManager;
         recent_learningLessons =
-            offlineDatabaseManager
-               .readAsyncOneOf(Recent_LearningLessons.class,
-                   recent_learningLessons ->
-        {
-            recent_lessons = recent_learningLessons.getRecent_learning_lessons();
-            if (onGetDataSuccess != null) onGetDataSuccess.onLoadSuccess(recent_lessons);
-        });
+                offlineDatabaseManager
+                        .readAsyncOneOf(Recent_LearningLessons.class,
+                                recent_learningLessons ->
+                                {
+                                    recent_lessons = recent_learningLessons.getRecent_learning_lessons();
+                                    onGetDataSuccess.onLoadSuccess(recent_lessons);
+                                });
     }
 
     public void bringToTop (RO_Lesson lesson) {

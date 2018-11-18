@@ -156,8 +156,6 @@ public class MainActivity extends FullScreenActivity implements IMainActivity.Vi
 
     private MainActivityPresenter activityPresenter;
 
-    private boolean updateAvailable;
-
     Animation fade_out, fade_in;
 
     @SuppressLint("HandlerLeak")
@@ -197,9 +195,7 @@ public class MainActivity extends FullScreenActivity implements IMainActivity.Vi
 
         activityPresenter.requirePermission(CODE_DRAW_OVER_OTHER_APP_PERMISSION);
 
-        UpdateDatabaseManager manager = new UpdateDatabaseManager(this);
-
-//        activityPresenter.checkUpdateStatus();
+        activityPresenter.checkUpdateStatus();
 
     }
 
@@ -391,7 +387,6 @@ public class MainActivity extends FullScreenActivity implements IMainActivity.Vi
             finish();
         });
 
-
         btn_turnOff_search.setOnClickListener(v -> {
             search_view_parent.startAnimation(fade_out);
             edt_search.setText("");
@@ -430,11 +425,10 @@ public class MainActivity extends FullScreenActivity implements IMainActivity.Vi
 
 
         btn_update.setOnClickListener (v -> {
-            activityPresenter.updateAll_CE_OFFDB();
-            activityPresenter.updateAll_Chapter_OFFDB();
-            activityPresenter.updateAll_DPDP_OFFDB();
-            startActivity(new Intent(MainActivity.this, MainActivity.class));
-            finish();
+            activityPresenter.update(() -> {
+                startActivity(new Intent(MainActivity.this, MainActivity.class));
+                finish();
+            });
         });
 
 
@@ -554,7 +548,6 @@ public class MainActivity extends FullScreenActivity implements IMainActivity.Vi
 
     @Override
     public void onDataLoadSuccess(ArrayList<RO_ChemicalEquation> ro_chemicalEquations) {
-        Log.e("Length ", ro_chemicalEquations.size() + " elements");
         rcv_search_adapter.setData(ro_chemicalEquations);
     }
 
@@ -564,29 +557,22 @@ public class MainActivity extends FullScreenActivity implements IMainActivity.Vi
     }
 
     @Override
-    public void onStatusChecked(boolean isAvailable) {
-        this.updateAvailable = isAvailable;
-        activityPresenter.getUpdateVersion();
-    }
-
-    @Override
-    public void onVersionChecked(long version) {
-        if (updateAvailable) {
-            if (activityPresenter.getDataVersion() == version) {
-                txt_update_status.setText(R.string.newest_version);
-            } else if (version - activityPresenter.getDataVersion() == 1) {
-                txt_update_status.setText(R.string.Available_For_Update);
-                btn_update.setVisibility(View.VISIBLE);
-            } else if (version - activityPresenter.getDataVersion() > 1) {
-                txt_update_status.setText(R.string.Available_For_Update);
-                btn_update.setVisibility(View.VISIBLE);
-            }
+    public void onStatusChecked(boolean isAvailable, long version) {
+        if (isAvailable) {
+            txt_update_status.setText("Available");
+            txt_update_version.setText("1." + version);
+            txt_update_version.setVisibility(View.VISIBLE);
+            btn_update.setVisibility(View.VISIBLE);
+            btn_update.setClickable(true);
         } else {
-            txt_update_status.setText(R.string.newest_version);
+            txt_update_status.setText("up to date");
+            txt_update_version.setVisibility(View.GONE);
+            btn_update.setVisibility(View.GONE);
+            btn_update.setClickable(false);
         }
-
-        txt_update_version.setText("1." + version);
     }
+
+
 
 }
 

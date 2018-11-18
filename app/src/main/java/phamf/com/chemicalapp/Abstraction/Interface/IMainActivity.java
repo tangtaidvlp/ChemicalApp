@@ -48,7 +48,7 @@ public interface IMainActivity {
 
         long getDataVersion ();
 
-        void saveDataVersion (int version);
+        void saveDataVersion (long version);
 
         void setOnDataLoadListener(MainActivityPresenter.DataLoadListener onDataLoadListener);
 
@@ -63,7 +63,5 @@ public interface IMainActivity {
         void bringToTop(RO_ChemicalEquation ro_ce);
 
         void checkUpdateStatus ();
-
-        void getUpdateVersion ();
     }
 }

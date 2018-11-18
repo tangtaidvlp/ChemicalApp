@@ -51,6 +51,22 @@ public class ROConverter {
         return ro_chapters;
     }
 
+    public static ArrayList<RO_DPDP> toRO_DPDPs (Collection<DPDP> ro_dpdps) {
+
+        ArrayList<RO_DPDP> ro_dpdps_list = new ArrayList<>();
+
+        for (DPDP dpdp : ro_dpdps) {
+            RO_DPDP new_ro_dpdp = new RO_DPDP();
+            new_ro_dpdp.setId(dpdp.getId());
+            new_ro_dpdp.setName(dpdp.getName());
+            new_ro_dpdp.setOrganicMolecules(ROConverter.toRO_OrganicMolecules(dpdp.getOrganicMolecules()));
+            ro_dpdps_list.add(new_ro_dpdp);
+        }
+
+        return ro_dpdps_list;
+
+    }
+
     public static ArrayList<RO_Chapter> toRO_Chapters_ArrayList (Collection<RO_Chapter> ro_chapters) {
         ArrayList<RO_Chapter> ro_chapters_list = new ArrayList<>();
         ro_chapters_list.addAll(ro_chapters);
@@ -63,6 +79,14 @@ public class ROConverter {
         return ro_dpdps_list;
     }
 
+    public static ArrayList<RO_Chemical_Element> toRO_Chemical_Elements(Collection<Chemical_Element> chemical_elements) {
+        ArrayList<RO_Chemical_Element> ro_chemical_elements = new ArrayList<>();
+        for (Chemical_Element element : chemical_elements) {
+            RO_Chemical_Element new_ro_ce = toRO_Chemical_Element(element);
+            ro_chemical_elements.add(new_ro_ce);
+        }
+        return ro_chemical_elements;
+    }
 
     public static ArrayList<RO_ChemicalEquation> toRO_CEs(ArrayList<ChemicalEquation> equations) {
         ArrayList<RO_ChemicalEquation> ro_ces = new ArrayList<>();

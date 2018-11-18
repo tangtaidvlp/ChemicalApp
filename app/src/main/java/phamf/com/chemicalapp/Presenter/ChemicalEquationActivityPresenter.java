@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 
 import java.util.ArrayList;
 
+import io.realm.RealmList;
 import phamf.com.chemicalapp.Abstraction.AbstractClass.Presenter;
 import phamf.com.chemicalapp.Abstraction.Interface.IChemicalEquationActivity;
 import phamf.com.chemicalapp.ChemicalEquationActivity;
@@ -39,13 +40,13 @@ public class ChemicalEquationActivityPresenter extends Presenter<ChemicalEquatio
             ArrayList <RO_ChemicalEquation> data = new ArrayList<>();
 
             recent_searching_CE_Data_manager = new RecentSearching_CE_Data_Manager(offlineDatabaseManager);
+            recent_searching_CE_Data_manager.setOnGetDataSuccess(
+                    recent_Ces -> {
+                        data.addAll(recent_Ces);
+                        onDataLoadedListener.onDataLoadedFromDatabase(data);
+                    }
+            );
 
-            data.addAll(recent_searching_CE_Data_manager.getData());
-
-            if (recent_searching_CE_Data_manager != null) {
-                if (data != null)
-                onDataLoadedListener.onDataLoadedFromDatabase(data);
-            }
         }
 
     }

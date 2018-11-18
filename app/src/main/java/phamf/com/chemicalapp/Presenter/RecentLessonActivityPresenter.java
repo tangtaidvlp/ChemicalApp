@@ -40,13 +40,13 @@ public class RecentLessonActivityPresenter extends Presenter<RecentLessonsActivi
         }
 
         ArrayList<RO_Lesson> data = new ArrayList<>();
-        recentLearningLessonDataManager = new RecentLearningLessonDataManager(offline_DBManager);
+        recentLearningLessonDataManager = new RecentLearningLessonDataManager();
         recentLearningLessonDataManager.setOnGetDataSuccess(recent_Ces ->
         {
             data.addAll(recent_Ces);
             onDataLoadListener.onDataLoadSuccess(data);
         });
-
+        recentLearningLessonDataManager.getData(offline_DBManager);
     }
 
     public void setOnDataLoadListener(DataLoadListener onDataLoadListener) {

@@ -96,9 +96,7 @@ public class ChemicalEquationActivity extends FullScreenActivity implements IChe
 
     public void setUpNecessaryInfos () {
         virtualKeyboardManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-
         setEdt_SearchAdvanceFunctions();
-
     }
 
     public void addControl () {
@@ -211,6 +209,7 @@ public class ChemicalEquationActivity extends FullScreenActivity implements IChe
 
     @Override
     public void onDataLoadedFromDatabase (ArrayList<RO_ChemicalEquation> chemicalEquations) {
+        Log.e("Length", chemicalEquations.size() + " a");
         rcv_search_adapter.setData(chemicalEquations);
     }
 }
