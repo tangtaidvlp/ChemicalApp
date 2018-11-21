@@ -94,12 +94,11 @@ public class FloatingSearchIconService extends Service {
                 }
 
                 case MotionEvent.ACTION_UP: {
+                    // If this condition is true means user click icon, not touch
                     if ((Math.abs(event.getRawX() - touchX) < 10) && (Math.abs(event.getRawY() - touchY) < 10)) {
-                        Intent startSearchIntent = new Intent(getApplicationContext(), MainActivity.class);
-                        startSearchIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        startActivity(startSearchIntent);
-                        stopSelf();
+                        OnIconClick();
                     }
+
                     break;
                 }
 
@@ -123,6 +122,14 @@ public class FloatingSearchIconService extends Service {
 
     private void addEvent () {
 
+    }
+
+    private void OnIconClick () {
+        Intent startSearchIntent = new Intent(getApplicationContext(), MainActivity.class);
+        startSearchIntent.putExtra(MainActivity.QUICK_SEACH, true);
+        startSearchIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(startSearchIntent);
+        stopSelf();
     }
 
     @Override

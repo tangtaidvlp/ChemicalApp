@@ -65,8 +65,6 @@ public class LessonActivity extends FullScreenActivity implements ILessonActivit
     @BindView(R.id.vpg_lesson) ViewPager vpg_lesson;
     ViewPager_Lesson_Adapter vpg_lesson_adapter;
 
-    private LessonViewCreator lessonViewCreator;
-
     private LessonActivityPresenter presenter;
 
     Animation fade_in, fade_out;
@@ -138,7 +136,6 @@ public class LessonActivity extends FullScreenActivity implements ILessonActivit
 
     }
 
-
     public void setTheme () {
         if (AppThemeManager.isOnNightMode) {
             bg_night_mode.setVisibility(View.VISIBLE);
@@ -154,7 +151,6 @@ public class LessonActivity extends FullScreenActivity implements ILessonActivit
         }
     }
 
-
     public void separatePart_And_BindDataToViewPG (String content) {
 
         String [] part_list = content.split(PART_DEVIDER);
@@ -163,15 +159,10 @@ public class LessonActivity extends FullScreenActivity implements ILessonActivit
         /**
          * @see phamf.com.chemicalapp.Fragment.LessonPartFragment
          */
-        for (String part : part_list) {
-            vpg_lesson_adapter.addData(part);
-        }
-
-        vpg_lesson_adapter.notifyDataSetChanged();
+        vpg_lesson_adapter.addData(part_list);
     }
 
     public void setUpViewCreator () {
-        lessonViewCreator = new LessonViewCreator(vpg_lesson_adapter);
         LessonViewCreator.ViewCreator.setMarginBigTitle(DpToPixel(10),DpToPixel(7),DpToPixel(10),0);
         LessonViewCreator.ViewCreator.setMarginSmallTitle(DpToPixel(13),DpToPixel(4),DpToPixel(10),0);
         LessonViewCreator.ViewCreator.setMarginContent(DpToPixel(20),DpToPixel(4),DpToPixel(10),0);

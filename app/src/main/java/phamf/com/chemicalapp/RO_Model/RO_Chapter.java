@@ -51,6 +51,7 @@ public class RO_Chapter extends RealmObject implements Menuable, Parcelable{
     }
 
     public void setLessons(Collection<RO_Lesson> lessons) {
+        this.lessons.clear();
         this.lessons.addAll(lessons);
     }
 

@@ -1,18 +1,24 @@
 package phamf.com.chemicalapp.CustomView;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import phamf.com.chemicalapp.Adapter.ViewPager_Lesson_Adapter;
 
+import android.text.Html;
 import android.util.Log;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import phamf.com.chemicalapp.Database.OfflineDatabaseManager;
 import phamf.com.chemicalapp.R;
+import phamf.com.chemicalapp.RO_Model.RO_Chemical_Image;
 
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 import static phamf.com.chemicalapp.Supporter.UnitConverter.DpToPixel;
@@ -50,6 +56,8 @@ public class LessonViewCreator {
 
         public static final String CONTENT = "<<content>>";
 
+        OfflineDatabaseManager offlineDatabaseManager;
+
         // Text data usually has form as follow : <<B_TITLE>><<BoldTxt>>Hello World
         // 11 is length of <<B_TITLE>> (Type) and the START position of <<BoldTxt>> (Text style) too
         // 22 is END position of <<BoldTxt>> and START position of content too
@@ -74,6 +82,7 @@ public class LessonViewCreator {
         public ViewCreator (Context context, LinearLayout parent) {
             this.context = context;
             this.parent = parent;
+            this.offlineDatabaseManager = new OfflineDatabaseManager(context);
         }
 
 
@@ -121,7 +130,7 @@ public class LessonViewCreator {
             TextView textView = new TextView(context);
             textView.setTextSize(DpToPixel(content_text_size));
             textView.setTextColor(Color.parseColor("#222222"));
-            textView.setText(content);
+            textView.setText(Html.fromHtml(content));
             textView.setTypeface(textView.getTypeface(), getTextStyle(style));
 
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(content_width, content_height);
@@ -132,7 +141,7 @@ public class LessonViewCreator {
 
         public void addBigTitle (String title, String style) {
             TextView textView = new TextView(context);
-            textView.setText(title);
+            textView.setText(Html.fromHtml(title));
             textView.setTypeface(textView.getTypeface(), getTextStyle(style));
             textView.setTextSize(DpToPixel(big_title_text_size));
             textView.setTextColor(Color.parseColor("#BA1308"));
@@ -145,7 +154,7 @@ public class LessonViewCreator {
 
         public void addSmallTitle (String title, String style) {
             TextView textView = new TextView(context);
-            textView.setText(title);
+            textView.setText(Html.fromHtml(title));
             textView.setTextSize(DpToPixel(small_title_text_size));
             textView.setTextColor(Color.parseColor("#BA1308"));
             textView.setTypeface(textView.getTypeface(), getTextStyle(style));
@@ -158,7 +167,7 @@ public class LessonViewCreator {
 
         public void addSmallerTitle (String title, String style) {
             TextView textView = new TextView(context);
-            textView.setText(title);
+            textView.setText(Html.fromHtml(title));
             textView.setTextSize(DpToPixel(smaller_title_text_size));
             textView.setTextColor(Color.parseColor("#BA1308"));
             textView.setTypeface(textView.getTypeface(), getTextStyle(style));
@@ -169,12 +178,15 @@ public class LessonViewCreator {
             parent.addView(textView);
         }
 
-        public void addImageContent (int imageId, int width, int height,
+        public void addImageContent (String imageId, int width, int height,
                                      int mLeft, int mTop, int mRight, int mBottom) {
 
-            Drawable background = context.getDrawable(imageId);
+            RO_Chemical_Image image_resouces = offlineDatabaseManager.readOneObjectOf(RO_Chemical_Image.class, "link", imageId);
+            byte[] byte_code_resouces = image_resouces.getByte_code_resouces();
+            Log.e("Byte", " " + byte_code_resouces.length);
+            Bitmap image_bitmap = BitmapFactory.decodeByteArray(byte_code_resouces, 0, byte_code_resouces.length);
             ImageView imageView = new ImageView(context);
-            imageView.setBackground(background);
+            imageView.setBackground(new BitmapDrawable(context.getResources(), image_bitmap));
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(width, height);
             params.setMargins(mLeft, mTop, mRight, mBottom);
             imageView.setLayoutParams(params);
@@ -197,18 +209,17 @@ public class LessonViewCreator {
                             //The position of 3 infomation below is arrange in info array follow the order"
                             // IMAGE_ID : 1 ; IMAGE_WIDTH : 2 ; IMAGE_HEIGHT : 3
 
-                            int id = Integer.valueOf(image_info[IMAGE_ID]);
+                            String id = image_info[IMAGE_ID];
                             int width = Integer.valueOf(image_info[IMAGE_WIDTH]);
                             int height = Integer.valueOf(image_info[IMAGE_HEIGHT]);
-                            Log.e("Id", id +"");
-                            Log.e("height", height +"");
-                            Log.e("width", width +"con cac");
+
                             addImageContent(id, DpToPixel(width), DpToPixel(height),
                                     DpToPixel(10),
                                     DpToPixel(10),
                                     DpToPixel(10),
                                     DpToPixel(10));
                         } catch (NumberFormatException ex) {
+                            ex.printStackTrace();
                             Log.e("Error when add image", "Đã xảy ra lỗi khi xử lí ảnh");
                             Log.e("Error when add image", "Error happened when process image");
                         }

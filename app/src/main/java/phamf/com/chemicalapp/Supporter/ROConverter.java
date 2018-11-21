@@ -31,14 +31,11 @@ public class ROConverter {
         ArrayList<RO_Lesson> ro_lessons = new ArrayList<>();
 
         for ( Lesson lesson : lessons ) {
-            RO_Lesson ro_lesson = new RO_Lesson();
-            ro_lesson.setId(lesson.getId());
-            ro_lesson.setName(lesson.getName());
-            ro_lesson.setContent(lesson.getContent());
-            ro_lessons.add(ro_lesson);
+            RO_Lesson new_ro_lesson = toRO_Lesson(lesson);
+            ro_lessons.add(new_ro_lesson);
         }
-        return ro_lessons;
 
+        return ro_lessons;
     }
 
     public static ArrayList<RO_Chapter> toRO_Chapters (Collection<Chapter> chapters) {
@@ -124,6 +121,14 @@ public class ROConverter {
         ro_chapter.setId(chapter.getid());
         ro_chapter.setLessons(chapter.getRo_lessons());
         return ro_chapter;
+    }
+
+    public static RO_Lesson toRO_Lesson (Lesson lesson) {
+        RO_Lesson ro_lesson = new RO_Lesson();
+        ro_lesson.setId(lesson.getId());
+        ro_lesson.setName(lesson.getName());
+        ro_lesson.setContent(lesson.getContent());
+        return ro_lesson;
     }
 
     public static RO_ChemicalEquation toRO_CE(ChemicalEquation equation) {

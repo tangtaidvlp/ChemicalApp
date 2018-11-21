@@ -2,6 +2,7 @@ package phamf.com.chemicalapp.Database;
 
 import android.content.Context;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 import io.realm.Realm;
@@ -33,15 +34,27 @@ public class OfflineDatabaseManager  {
         return realm.where(dataType).equalTo(whereField, value).findFirst();
     }
 
+    public <E extends RealmObject> E readOneObjectOf(Class<E> dataType, String whereField, String value) {
+        return realm.where(dataType).equalTo(whereField, value).findFirst();
+    }
+
         public <E extends RealmObject> void addOrUpdateDataOf (Class<E> dataType, Collection<E> value) {
         realm.beginTransaction();
         realm.insertOrUpdate(value);
         realm.commitTransaction();
     }
 
-    public <E extends RealmObject> void addOrUpdateDataOf (Class<E> dataType, E value) {
+    public <E extends RealmObject> void addOrUpdateDataOf (Class<E> dataType, E... value) {
         realm.beginTransaction();
-        realm.insertOrUpdate(value);
+        if (value.length == 1) {
+            realm.insertOrUpdate(value[0]);
+        } else if (value.length > 1) {
+            ArrayList<E> list = new ArrayList();
+            for (E e : value) {
+                list.add(e);
+            }
+            realm.insertOrUpdate(list);
+        }
         realm.commitTransaction();
     }
 

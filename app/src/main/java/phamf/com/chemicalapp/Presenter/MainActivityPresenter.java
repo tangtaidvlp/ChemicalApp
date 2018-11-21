@@ -31,6 +31,7 @@ import phamf.com.chemicalapp.RO_Model.RO_Chapter;
 import phamf.com.chemicalapp.RO_Model.RO_ChemicalEquation;
 import phamf.com.chemicalapp.RO_Model.RO_Chemical_Element;
 import phamf.com.chemicalapp.RO_Model.RO_DPDP;
+import phamf.com.chemicalapp.RO_Model.RO_Lesson;
 import phamf.com.chemicalapp.RO_Model.Recent_SearchingCEs;
 import phamf.com.chemicalapp.Supporter.ROConverter;
 
@@ -59,6 +60,8 @@ public class MainActivityPresenter extends Presenter<MainActivity> implements IM
     public static final String APP_INFO = "app_info";
 
     public static final String DATABASE_VERSION = "db_vers";
+
+    public static final String HAS_DEFAULT_VALUE = "has_def_val";
 
 
     public MainActivityPresenter (@NonNull MainActivity view) {
@@ -145,6 +148,58 @@ public class MainActivityPresenter extends Presenter<MainActivity> implements IM
         editor.apply();
     }
 
+    public void addDefaultDataOnceTime() {
+        SharedPreferences app_info = context.getSharedPreferences(APP_INFO, MODE_PRIVATE);
+        boolean has_default_value = app_info.getBoolean(HAS_DEFAULT_VALUE, false);
+        if (!has_default_value) {
+            try {
+                // This data just for demo
+                // Lessons
+                RO_Lesson ro_lesson = new RO_Lesson();
+                ro_lesson.setId(0);
+                ro_lesson.setContent("<<b_title>><<boldTxt>>A. Tính chất hóa học<co_divi><<s_title>><<boldTxt>>1) Tác dụng với Bazo<co_divi><<content>><<boldTxt>>Khi tác dụng với các Bazo mạnh như NaOH, BaOH, ... Chất a tạo kết tủa trắng       đồng thời giải phóng 1 lượng lớn CO2. Khi tác dụng với các Bazo mạnh như NaOH, BaOH, ... Chất a tạo kết tủa trắng       đồng thời giải phóng 1 lượng lớn CO2.<co_divi><<picture<>Lessons/lesson1/image0.png<>400<>100<><co_divi><<content>><<boldTxt>>Khi tác dụng với các Bazo mạnh như NaOH, BaOH, ... Chất a tạo kết tủa trắng       đồng thời giải phóng 1 lượng lớn CO2. Khi tác dụng với các Bazo mạnh như NaOH, BaOH, ...");
+                ro_lesson.setName("Bai 1");
+
+                RO_Lesson ro_lesson1 = new RO_Lesson();
+                ro_lesson1.setId(1);
+                ro_lesson1.setContent("<<b_title>><<boldTxt>>A. Tính chất hóa học<co_divi><<s_title>><<boldTxt>>1) Tác dụng với Bazo<co_divi><<content>><<boldTxt>>Khi tác dụng với các Bazo mạnh như NaOH, BaOH, ... Chất a tạo kết tủa trắng       đồng thời giải phóng 1 lượng lớn CO2. Khi tác dụng với các Bazo mạnh như NaOH, BaOH, ... Chất a tạo kết tủa trắng       đồng thời giải phóng 1 lượng lớn CO2.<co_divi><<picture<>Lessons/lesson1/image0.png<>400<>100<><co_divi><<content>><<boldTxt>>Khi tác dụng với các Bazo mạnh như NaOH, BaOH, ... Chất a tạo kết tủa trắng       đồng thời giải phóng 1 lượng lớn CO2. Khi tác dụng với các Bazo mạnh như NaOH, BaOH, ...");
+                ro_lesson1.setName("Bai 2");
+
+                RO_Lesson ro_lesson2 = new RO_Lesson();
+                ro_lesson2.setId(2);
+                ro_lesson2.setContent("<<b_title>><<boldTxt>>A. Tính chất hóa học<co_divi><<s_title>><<boldTxt>>1) Tác dụng với Bazo<co_divi><<content>><<boldTxt>>Khi tác dụng với các Bazo mạnh như NaOH, BaOH, ... Chất a tạo kết tủa trắng       đồng thời giải phóng 1 lượng lớn CO2. Khi tác dụng với các Bazo mạnh như NaOH, BaOH, ... Chất a tạo kết tủa trắng       đồng thời giải phóng 1 lượng lớn CO2.<co_divi><<picture<>Lessons/lesson1/image0.png<>400<>100<><co_divi><<content>><<boldTxt>>Khi tác dụng với các Bazo mạnh như NaOH, BaOH, ... Chất a tạo kết tủa trắng       đồng thời giải phóng 1 lượng lớn CO2. Khi tác dụng với các Bazo mạnh như NaOH, BaOH, ...");
+                ro_lesson2.setName("Bai 3");
+
+                ArrayList<RO_Lesson> ro_lessons = new ArrayList<>();
+                ro_lessons.add(ro_lesson);
+                ro_lessons.add(ro_lesson1);
+
+                ArrayList<RO_Lesson> ro_lessons1 = new ArrayList<>();
+                ro_lessons1.add(ro_lesson2);
+
+                //Chapters
+                RO_Chapter ro_chapter = new RO_Chapter();
+                ro_chapter.setId(0);
+                ro_chapter.setName("Chuong 1");
+                ro_chapter.setLessons(ro_lessons);
+
+                RO_Chapter ro_chapter1 = new RO_Chapter();
+                ro_chapter1.setId(1);
+                ro_chapter1.setName("Chuong 2");
+                ro_chapter1.setLessons(ro_lessons1);
+
+                offlineDB_manager.addOrUpdateDataOf(RO_Chapter.class, ro_chapter, ro_chapter1);
+
+                SharedPreferences.Editor editor = app_info.edit();
+                editor.putBoolean(HAS_DEFAULT_VALUE, true);
+                editor.apply();
+
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }
+    }
+
     public void loadData () {
         if (onDataLoadListener == null) return;
 
@@ -208,10 +263,10 @@ public class MainActivityPresenter extends Presenter<MainActivity> implements IM
         updateDB_Manager.getLastestVersionUpdate(version -> {
             // if firebase database version is bigger than app version, there's at least
             // one update version available
+            Log.e("App version", getDataVersion() + "");
             onUpdateChecked.onStatusChecked(version > getDataVersion(), version);
         });
     }
-
 
 
     /**

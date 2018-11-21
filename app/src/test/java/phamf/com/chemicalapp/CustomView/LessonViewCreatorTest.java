@@ -17,6 +17,7 @@ import phamf.com.chemicalapp.R;
 
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -53,15 +54,11 @@ public class LessonViewCreatorTest {
 
         LinearLayout linear_Layout = mock(LinearLayout.class);
 
-        LessonViewCreator lessonViewCreator = new LessonViewCreator(mock(ViewPager_Lesson_Adapter.class));
-
         LessonViewCreator.ViewCreator view_creator = spy(new LessonViewCreator.ViewCreator(context, linear_Layout));
-
-        lessonViewCreator.separatePart_And_BindDataToViewPG(soft_content);
 
         when(context.getDrawable(R.drawable.back_icon)).thenReturn(mock(Drawable.class));
 
-        doAnswer(invocation -> null).when(view_creator).addImageContent(R.drawable.back_icon,0,0,0,0,0, 0);
+        doAnswer(invocation -> null).when(view_creator).addImageContent("mock/link",0,0,0,0,0, 0);
 
         doAnswer(invocation -> null).when(view_creator).addBigTitle(any(String.class), any(String.class));
 
@@ -73,7 +70,7 @@ public class LessonViewCreatorTest {
         verify(view_creator, times(3)).addBigTitle(any(String.class), any(String.class));
         verify(view_creator, times(3)).addContent(any(String.class), any(String.class));
         verify(view_creator, times(3)).addSmallTitle(any(String.class), any(String.class));
-        verify(view_creator, never()).addImageContent(any(Integer.class),any(Integer.class),any(Integer.class),any(Integer.class),any(Integer.class),any(Integer.class),any(Integer.class) );
+        verify(view_creator, never()).addImageContent(any(String.class),any(Integer.class),any(Integer.class),any(Integer.class),any(Integer.class),any(Integer.class),any(Integer.class) );
     }
 
 

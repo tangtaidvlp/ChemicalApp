@@ -323,11 +323,12 @@
             </LinearLayout>
 
             <LinearLayout
+                android:id="@+id/linearlayout_version"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:orientation="horizontal"
-                android:visibility="visible">
+                android:visibility="gone">
 
                 <TextView
                     android:layout_width="145dp"

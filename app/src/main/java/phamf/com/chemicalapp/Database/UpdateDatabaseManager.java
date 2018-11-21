@@ -42,7 +42,7 @@ public class UpdateDatabaseManager {
 
     StorageReference firebase_storage;
 
-    private long update_version;
+    private long lasted_update_version;
 
     private float app_version;
 
@@ -61,13 +61,10 @@ public class UpdateDatabaseManager {
         firebase_database.child(LASTED_UPDATE_VERSION).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                update_version = (long) dataSnapshot.getValue();
-                // Plus one to make sure that the recursive loop start from
-                // a version bigger than app version.
-                // For example : if app version is 1 and the lasted version is 3,
-                // the loop should start at 2 instead of 1
+                lasted_update_version = (long) dataSnapshot.getValue();
+
                 try {
-                    download_And_Process_UpdateFile((long) (app_version), update_version);
+                    download_And_Process_UpdateFile((long) (app_version), lasted_update_version);
                 } catch (Exception ex) {
                     Log.e("error", "UpdateDatabaseManage.java/71");
                     ex.printStackTrace();
@@ -100,47 +97,56 @@ public class UpdateDatabaseManager {
 
 
     public void download_And_Process_UpdateFile(long version, long last_version) {
-
-        if (version > last_version) {
-            onASectionUpdated.onASectionUpdatedSuccess(last_version, true);
-            return;
-        }
-
-        try {
-            firebase_database.child(String.valueOf((int)version)).addValueEventListener(new ValueEventListener() {
-                @Override
-                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    //Download
-                    UpdateFile updateFile = dataSnapshot.getValue(UpdateFile.class);
-
-                    try {
-
-                        // "Update File" is retrieved
-                        processUpdateFile(updateFile);
-
-                        // firebase database get data asynchronously So can't use for loop to get
-                        // every update file on firebase
-                        // Solution is using Recursive : Đệ quy,
-                        download_And_Process_UpdateFile(version + 1, last_version);
-                        onASectionUpdated.onASectionUpdatedSuccess(version + 1, false);
-                    } catch (Exception ex) {
-                        ex.printStackTrace();
-                    }
-
+/*   ^   */
+/*  /^\  */
+/* / ^ \ */     long _version = version + 1;
+/*   ^   */
+/*   ^   */    if (_version > last_version) {
+/*   ^   */        onASectionUpdated.on_A_Version_Updated_Success(last_version, true);
+/*   ^   */        return;
+/*   ^   */    }
+/*   ^   */
+/*   ^   */    firebase_database.child(String.valueOf((int)_version)).addValueEventListener(new ValueEventListener() {
+/*   ^   */        @Override
+/*   ^   */        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+/*   ^   */            //Download
+/*   ^   */            UpdateFile updateFile = dataSnapshot.getValue(UpdateFile.class);
+/*   ^   */
+/*   ^   */            try {
+/*   ^   */
+/*   ^   */                // "Update File" is retrieved
+/*   ^   */                assert updateFile != null;
+/*   ^   */                processUpdateFile(updateFile);
+/*   ^   */                Log.e("Chapters size", (updateFile.getChapters() != null) + "");
+/*   ^   */                // firebase database get data asynchronously So can't use for loop to get
+/*   ^   */                // every update file on firebase
+/*   ^   */                // Solution is using Recursive : Đệ quy,
+/*   ^<<<<<<<<<<<<<<<<<<<<<*/ download_And_Process_UpdateFile(_version, last_version);
+                    onASectionUpdated.on_A_Version_Updated_Success(_version, false);
+                } catch (Exception ex) {
+                    ex.printStackTrace();
                 }
 
-                @Override
-                public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
 
-                }
-            });
-
-        } catch (Exception ex) {
-
-        }
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+            }
+        });
 
     }
 
+    /**
+     * Download data
+     * Include functions:
+     *   + process_Lessons()
+     *   + getRO_LessonListFromIds()
+     *   + process_Chapters()
+     *   + process_Chemical_Elements()
+     *   + process_Chemical_Equations()
+     *   + process_DPDPs()
+     *   + process_Images()
+     *   + downLoadImage()
+     *  **/
     private void processUpdateFile (UpdateFile updateFile) {
 
         if (updateFile == null) {
@@ -153,37 +159,37 @@ public class UpdateDatabaseManager {
             // lessons in database depend on the lesson_id which update_file contains in updatefile.lessons
 
             if (updateFile.getLessons() != null) {
-                processAndUpdate_Lessons(updateFile.lessons);
+                process_Lessons(updateFile.lessons);
             } else {
                 Log.e("Lessons ", "null");
             }
 
             if (updateFile.getChapters()!= null) {
-                processAndUpdate_Chapters(updateFile.chapters);
+                process_Chapters(updateFile.chapters);
             } else {
                 Log.e("Chapters ", "null");
             }
 
             if (updateFile.images != null) {
-                processAndUpdate_Images(updateFile.images);
+                process_Images(updateFile.images);
             } else {
                 Log.e("Images ", "null");
             }
 
             if (updateFile.dpdps != null) {
-                processAndUpdate_DPDPs(updateFile.dpdps);
+                process_DPDPs(updateFile.dpdps);
             } else {
                 Log.e("Dpdps ", "null");
             }
 
             if (updateFile.chemical_equations != null) {
-                processAndUpdate_Chemical_Equations(updateFile.chemical_equations);
+                process_Chemical_Equations(updateFile.chemical_equations);
             } else {
                 Log.e("Chemical equations ", "null");
             }
 
             if (updateFile.chemical_elements != null) {
-                processAndUpdate_Chemical_Elements(updateFile.chemical_elements);
+                process_Chemical_Elements(updateFile.chemical_elements);
             } else {
                 Log.e("Chemical Elements ", "null");
             }
@@ -200,7 +206,7 @@ public class UpdateDatabaseManager {
     }
 
     // Lesson
-    private void processAndUpdate_Lessons (ArrayList<Lesson> chapter_list) {
+    private void process_Lessons (ArrayList<Lesson> chapter_list) {
 
         ArrayList<RO_Lesson> ro_lessons = ROConverter.toRO_Lessons(chapter_list);
         offlineDatabaseManager.addOrUpdateDataOf(RO_Lesson.class, ro_lessons);
@@ -209,7 +215,7 @@ public class UpdateDatabaseManager {
     private ArrayList<RO_Lesson> getRO_LessonListFromIds (ArrayList<Long> id_list) {
 
         if (id_list == null | id_list.size() == 0) {
-            Log.e("Error happened", "Please check UpdateDatabaseManager.java");
+            Log.e("Error happened", "Please check UpdateDatabaseManager.java, line 206");
             return null;
         }
 
@@ -217,15 +223,18 @@ public class UpdateDatabaseManager {
 
         for (long id : id_list) {
             RO_Lesson ro_lesson = offlineDatabaseManager.readOneObjectOf(RO_Lesson.class, "id", (int) id);
-            ro_lessons.add(ro_lesson);
+            if (ro_lesson != null) ro_lessons.add(ro_lesson);
         }
 
         return ro_lessons;
     }
 
-    // Chapter
-    private void processAndUpdate_Chapters (ArrayList<Chapter> chapter_list) {
 
+
+    // Chapter
+    private void process_Chapters (ArrayList<Chapter> chapter_list) {
+
+        // Bind RO_Lesson from db to Chapter by lesson's id
         for (Chapter chapter : chapter_list){
             ArrayList<RO_Lesson> ro_lessons_list = getRO_LessonListFromIds(chapter.getLessons());
             chapter.setRo_lessons(ro_lessons_list);
@@ -235,28 +244,38 @@ public class UpdateDatabaseManager {
         offlineDatabaseManager.addOrUpdateDataOf(RO_Chapter.class, ro_chapters);
     }
 
+
+
     // Chemical Element
-    private void processAndUpdate_Chemical_Elements (ArrayList<Chemical_Element> chemical_element_list) {
+    private void process_Chemical_Elements (ArrayList<Chemical_Element> chemical_element_list) {
         ArrayList<RO_Chemical_Element> ro_chemical_elements = ROConverter.toRO_Chemical_Elements(chemical_element_list);
         offlineDatabaseManager.addOrUpdateDataOf(RO_Chemical_Element.class, ro_chemical_elements);
     }
 
+
+
     // Chemical Equation
-    private void processAndUpdate_Chemical_Equations (ArrayList<ChemicalEquation> chemical_equations_list) {
+    private void process_Chemical_Equations (ArrayList<ChemicalEquation> chemical_equations_list) {
         ArrayList<RO_ChemicalEquation> ro_chemicalEquations = ROConverter.toRO_CEs(chemical_equations_list);
         offlineDatabaseManager.addOrUpdateDataOf(RO_ChemicalEquation.class, ro_chemicalEquations);
     }
 
+
+
     // DPDP
-    private void processAndUpdate_DPDPs (ArrayList<DPDP> dpdp_list) {
+    private void process_DPDPs (ArrayList<DPDP> dpdp_list) {
         ArrayList<RO_DPDP> ro_dpdps = ROConverter.toRO_DPDPs(dpdp_list);
         offlineDatabaseManager.addOrUpdateDataOf(RO_DPDP.class, ro_dpdps);
     }
 
+
+
     // Image
-    private void processAndUpdate_Images(ArrayList<String> link_list) {
+    private void process_Images(ArrayList<String> link_list) {
         downLoadImage(link_list, 0);
     }
+
+
 
     final long ONE_AND_HAFT_MEGABYTE = (long) (1024 * 1024 * 1.5);
     private void downLoadImage (ArrayList<String> link_list, int pointer) {
@@ -264,15 +283,13 @@ public class UpdateDatabaseManager {
 
         String link = link_list.get(pointer);
 
-        firebase_storage.child(link).getBytes(ONE_AND_HAFT_MEGABYTE).addOnSuccessListener(new OnSuccessListener<byte[]>() {
-            @Override
-            public void onSuccess(byte[] byte_code_resouces) {
-                RO_Chemical_Image chemical_image = new RO_Chemical_Image(link, byte_code_resouces);
-                offlineDatabaseManager.addOrUpdateDataOf(RO_Chemical_Image.class, chemical_image);
+        // Get image
+        firebase_storage.child(link).getBytes(ONE_AND_HAFT_MEGABYTE).addOnSuccessListener(byte_code_resouces -> {
+            RO_Chemical_Image chemical_image = new RO_Chemical_Image(link, byte_code_resouces);
+            offlineDatabaseManager.addOrUpdateDataOf(RO_Chemical_Image.class, chemical_image);
 
-                // Recursive
-                downLoadImage(link_list, pointer + 1);
-            }
+            // Recursive
+            downLoadImage(link_list, pointer + 1);
         });
 
     }
@@ -281,9 +298,129 @@ public class UpdateDatabaseManager {
         this.onASectionUpdated = onASectionUpdated;
     }
 
-    // Update data
+
+
+
+    /**
+     *  Update data
+     *  Include methods:
+     *    + updateLessons()
+     *    + updateChapter()
+     *    + updateChemical_Elements()
+     *    + updateChemical_Equations()
+     *    + updateDpdps()
+     *  **/
     private void processUpdateData(UpdateData update_data) {
 
+        if (update_data.getLessons() != null) {
+            updateLessons(0, update_data.getLessons());
+        }
+
+        if (update_data.getChapters() != null) {
+            updateChapter(0, update_data.getChapters());
+        }
+
+        if (update_data.getChemical_elements() != null) {
+            updateChemical_Elements(0, update_data.getChemical_elements());
+
+        }
+
+        if (update_data.getChemical_equations() != null) {
+            updateChemical_Equations(0, update_data.getChemical_equations());
+        }
+
+        if (update_data.getDpdps() != null) {
+            updateDpdps(0, update_data.getDpdps());
+        }
+    }
+
+    private void updateLessons(int pointer, ArrayList<String> lessons_link) {
+
+        if (pointer >= lessons_link.size()) return;
+
+        firebase_database.child(lessons_link.get(pointer)).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Lesson lesson = dataSnapshot.getValue(Lesson.class);
+                offlineDatabaseManager.addOrUpdateDataOf(RO_Lesson.class, ROConverter.toRO_Lesson(lesson));
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+    }
+
+    private void updateChapter (int pointer, ArrayList<String> chapters_link) {
+        if (pointer >= chapters_link.size()) return;
+
+        firebase_database.child(chapters_link.get(pointer)).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Chapter chapter = dataSnapshot.getValue(Chapter.class);
+                ArrayList<RO_Lesson> ro_lessons_list = getRO_LessonListFromIds(chapter.getLessons());
+                chapter.setRo_lessons(ro_lessons_list);
+                offlineDatabaseManager.addOrUpdateDataOf(RO_Chapter.class, ROConverter.toRO_Chapter(chapter));
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void updateChemical_Elements (int pointer, ArrayList<String> chemical_elements_link) {
+        if (pointer >= chemical_elements_link.size()) return;
+
+        firebase_database.child(chemical_elements_link.get(pointer)).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                Chemical_Element chemical_element = dataSnapshot.getValue(Chemical_Element.class);
+                offlineDatabaseManager.addOrUpdateDataOf(RO_Chemical_Element.class, ROConverter.toRO_Chemical_Element(chemical_element));
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void updateChemical_Equations (int pointer, ArrayList<String> chemical_equations_link) {
+        if (pointer >= chemical_equations_link.size()) return;
+
+        firebase_database.child(chemical_equations_link.get(pointer)).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                ChemicalEquation chemical_equation = dataSnapshot.getValue(ChemicalEquation.class);
+                offlineDatabaseManager.addOrUpdateDataOf(RO_ChemicalEquation.class, ROConverter.toRO_CE(chemical_equation));
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void updateDpdps(int pointer, ArrayList<String> dpdps_link) {
+        if (pointer >= dpdps_link.size()) return;
+
+        firebase_database.child(dpdps_link.get(pointer)).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                DPDP dpdp = dataSnapshot.getValue(DPDP.class);
+                offlineDatabaseManager.addOrUpdateDataOf(RO_DPDP.class, ROConverter.toRO_DPDP(dpdp));
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
     }
 
 
@@ -292,7 +429,7 @@ public class UpdateDatabaseManager {
     }
 
     public interface OnASectionUpdated {
-        void onASectionUpdatedSuccess (long version, boolean isLastVersion);
+        void on_A_Version_Updated_Success (long version, boolean isLastVersion);
     }
 
 }

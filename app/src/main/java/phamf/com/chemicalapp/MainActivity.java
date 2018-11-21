@@ -21,6 +21,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -40,11 +41,13 @@ import phamf.com.chemicalapp.Adapter.Search_CE_RCV_Adapter;
 import phamf.com.chemicalapp.CustomAnimation.FadedInAnim;
 import phamf.com.chemicalapp.CustomAnimation.FadedOutAnim;
 import phamf.com.chemicalapp.CustomView.ViewPagerIndicator;
+import phamf.com.chemicalapp.Database.OfflineDatabaseManager;
 import phamf.com.chemicalapp.Database.UpdateDatabaseManager;
 import phamf.com.chemicalapp.Manager.AppThemeManager;
 import phamf.com.chemicalapp.Manager.FloatingSearchViewManager;
 import phamf.com.chemicalapp.Presenter.MainActivityPresenter;
 import phamf.com.chemicalapp.RO_Model.RO_ChemicalEquation;
+import phamf.com.chemicalapp.RO_Model.RO_Chemical_Image;
 import phamf.com.chemicalapp.Service.FloatingSearchIconService;
 import phamf.com.chemicalapp.Manager.FontManager;
 import phamf.com.chemicalapp.CustomView.VirtualKeyBoardSensor;
@@ -58,6 +61,8 @@ import phamf.com.chemicalapp.Manager.FullScreenManager;
 public class MainActivity extends FullScreenActivity implements IMainActivity.View, MainActivityPresenter.DataLoadListener, OnThemeChangeListener, MainActivityPresenter.OnUpdateCheckedListener {
 
     static final int CODE_DRAW_OVER_OTHER_APP_PERMISSION = 2084;
+
+    public static final String QUICK_SEACH = "is_quick_search";
 
     @BindView(R.id.txt_lesson) TextView txt_lesson;
 
@@ -139,6 +144,8 @@ public class MainActivity extends FullScreenActivity implements IMainActivity.Vi
 
     @BindView(R.id.txt_update_version) TextView txt_update_version;
 
+    @BindView(R.id.linearlayout_version) LinearLayout linearLayout_version;
+
     @BindView(R.id.sw_night_mode) Switch sw_night_mode;
 
 
@@ -182,6 +189,8 @@ public class MainActivity extends FullScreenActivity implements IMainActivity.Vi
 
         activityPresenter.loadTheme();
 
+        activityPresenter.addDefaultDataOnceTime();
+
         createNecessaryInfo();
 
         /**Mark to ez to see**/
@@ -196,6 +205,8 @@ public class MainActivity extends FullScreenActivity implements IMainActivity.Vi
         activityPresenter.requirePermission(CODE_DRAW_OVER_OTHER_APP_PERMISSION);
 
         activityPresenter.checkUpdateStatus();
+
+        if_open_activity_for_quick_search();
 
     }
 
@@ -543,7 +554,21 @@ public class MainActivity extends FullScreenActivity implements IMainActivity.Vi
     }
 
     public void showSoftKeyboard () {
+
         virtualKeyboardManager.toggleSoftInput(0, InputMethodManager.SHOW_IMPLICIT);
+        Toast.makeText(this, "Show", Toast.LENGTH_SHORT).show();
+    }
+
+    // Check if this activity is opened by Quick Search Icon, the search view will be turned on
+    private void if_open_activity_for_quick_search() {
+        Bundle bundle = getIntent().getExtras();
+        if (bundle != null){
+            boolean getIntentForQuickSearch = bundle.getBoolean(QUICK_SEACH, false);
+            if (getIntentForQuickSearch) {
+                btn_search.performClick();
+            }
+        }
+
     }
 
     @Override
@@ -561,15 +586,16 @@ public class MainActivity extends FullScreenActivity implements IMainActivity.Vi
         if (isAvailable) {
             txt_update_status.setText("Available");
             txt_update_version.setText("1." + version);
+            linearLayout_version.setVisibility(View.VISIBLE);
             txt_update_version.setVisibility(View.VISIBLE);
             btn_update.setVisibility(View.VISIBLE);
             btn_update.setClickable(true);
         } else {
             txt_update_status.setText("up to date");
-            txt_update_version.setVisibility(View.GONE);
             btn_update.setVisibility(View.GONE);
             btn_update.setClickable(false);
         }
+        Log.e("Version", version + "");
     }
 
 

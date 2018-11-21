@@ -12,8 +12,12 @@ import android.widget.LinearLayout;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import phamf.com.chemicalapp.CustomView.LessonHtmlViewCreator;
 import phamf.com.chemicalapp.CustomView.LessonViewCreator;
 import phamf.com.chemicalapp.R;
+
+import static phamf.com.chemicalapp.CustomView.LessonHtmlViewCreator.DEVIDER;
+import static phamf.com.chemicalapp.CustomView.LessonHtmlViewCreator.IMAGE;
 
 public class LessonPartFragment extends Fragment {
 
@@ -50,4 +54,13 @@ public class LessonPartFragment extends Fragment {
         return fragment;
     }
 
+}
+class test {
+    public static void main (String[ ] s) {
+        String content = "200|100|Lessons/lesson1/image1.jpg";
+        for (String ss : content.split("\\|")) {
+            System.out.println(ss);
+        }
+
+    }
 }

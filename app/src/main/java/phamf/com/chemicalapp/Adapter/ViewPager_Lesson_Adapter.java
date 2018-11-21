@@ -32,8 +32,11 @@ public class ViewPager_Lesson_Adapter extends FragmentPagerAdapter{
         notifyDataSetChanged();
     }
 
-    public void addData (String newContent) {
-        this.list.add(newContent);
+    public void addData (String... newContent) {
+        for (String part : newContent) {
+            list.add(part);
+        }
+        notifyDataSetChanged();
     }
 
     @Override
