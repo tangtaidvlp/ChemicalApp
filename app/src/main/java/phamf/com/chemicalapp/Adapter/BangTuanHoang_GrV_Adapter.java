@@ -52,43 +52,33 @@ public class BangTuanHoang_GrV_Adapter extends BaseAdapter {
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+        LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View view;
 
         // The empty chemical element present for a empty position
-        if (list.get(position).getName() == "") {
-            LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = layoutInflater.inflate(R.layout.child_empty_chemical_element, parent, false);
-            return convertView;
+        if (list.get(position).getName().equals("")) {
+            view = layoutInflater.inflate(R.layout.child_empty_chemical_element, parent, false);
+            return view;
         }
 
-        ViewHolder viewHolder;
+        view = layoutInflater.inflate(R.layout.child_chemical_element, parent, false);
 
-        if (convertView == null) {
-            LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            convertView = layoutInflater.inflate(R.layout.child_chemical_element, parent, false);
-            viewHolder = new ViewHolder();
-            viewHolder.txt_name = convertView.findViewById(R.id.child_txt_ele_name);
-            viewHolder.txt_symbol = convertView.findViewById(R.id.child_txt_ele_symbol);
-            viewHolder.txt_proton = convertView.findViewById(R.id.child_txt_ele_proton);
-            viewHolder.txt_mass = convertView.findViewById(R.id.child_txt_ele_mass);
-            convertView.setTag(viewHolder);
-            final View finalConvertView = convertView;
-            // get item's with to calculate gridview's width
-            convertView.getViewTreeObserver().addOnGlobalLayoutListener(() -> itemWidth = finalConvertView.getLayoutParams().width);
-
-        } else {
-            viewHolder = (ViewHolder) convertView.getTag();
-        }
+        TextView txt_electron_structure = view.findViewById(R.id.child_txt_electron_structure);
+        TextView txt_proton = view.findViewById(R.id.child_txt_ele_proton );
+        TextView txt_symbol = view.findViewById(R.id.child_txt_ele_symbol );
+        TextView txt_name = view.findViewById(R.id.child_txt_ele_name );
+        TextView txt_mass = view.findViewById(R.id.child_txt_ele_mass );
 
         RO_Chemical_Element element = list.get(position);
-
-        viewHolder.txt_proton.setText(String.valueOf(element.getProton_count()));
-        viewHolder.txt_symbol.setText(element.getSymbol());
-        viewHolder.txt_name.setText(element.getName());
+        txt_proton.setText(String.valueOf(element.getProton_count()));
+        txt_symbol.setText(element.getSymbol());
+        txt_name.setText(element.getName());
         String mass = (element.getMass() + "").endsWith(".0") ? ((int) element.getMass()) + "" : element.getMass() + "";
-        viewHolder.txt_mass.setText(mass);
-        convertView.setBackgroundColor(element.getBackground_color());
+        txt_mass.setText(mass);
+        txt_electron_structure.setBackgroundColor(element.getBackground_color());
+        view.setBackgroundColor(element.getBackground_color());
 
-        return convertView;
+        return view;
     }
 
     public void adaptFor (GridView gridView) {
@@ -114,6 +104,7 @@ public class BangTuanHoang_GrV_Adapter extends BaseAdapter {
         TextView txt_symbol;
         TextView txt_name;
         TextView txt_mass;
+        TextView txt_electron_structure;
     }
 
     public interface OnItemClickListener {
